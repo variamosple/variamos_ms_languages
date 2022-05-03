@@ -1,0 +1,542 @@
+openapi: 3.0.0
+servers:
+  - description: Variamos APIs
+    url: https://virtserver.swaggerhub.com/magudeloz/variamos-ms-language/1.0.0
+info:
+  description: This is a microservice API for languages management. 
+  version: "1.0.0"
+  title: Variamos Microservice Language API
+  contact:
+    email: info@variamos.com
+  license:
+    name: License VariaMos 1.0
+    url: 'https://variamos.com/home/licenses/'
+tags:
+  - name: Users
+    description: Operations available to regular users
+  - name: Admin
+    description: Secured Admin-only calls
+paths:
+  /languages:
+    get:
+      tags:
+        - Users
+      summary: search language 
+      operationId: getLanguages
+      description: |
+        By passing in the appropriate options, you can search for
+        available language in the VariaMos data base.
+      responses:
+        '200':
+          description: Search results languages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getResponses'
+        '500':
+          description: Internal Server Error 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+    post:
+      tags:
+        - Admin
+      summary: create new language 
+      operationId: createLanguage
+      description: By passing in the appropriate options, you can create a new language in the VariaMos data base.
+      requestBody:
+        $ref: '#/components/requestBodies/postRequestCreate'
+      responses:
+        '200':
+          description: Search results languages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponseCreate'
+        '500':
+          description: Internal Server Error 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError' 
+  '/languages/{languageId}':
+    put:
+      tags:
+        - Admin
+      summary: Update language by Id 
+      operationId: updateLanguage
+      description: By passing in the appropriate options, you can update language in the VariaMos data base.
+      requestBody:
+        $ref: '#/components/requestBodies/postRequestUpdate'
+      parameters:
+        - name: languageId
+          in: path
+          description: Id of language
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Update language matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsesDetailObject'
+        '500':
+          description: Internal Server Error  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+    delete:
+      tags:
+        - Admin
+      summary: Delete language by Id 
+      operationId: deleteLanguage
+      description: By passing in the appropriate options, you can delete a language in the VariaMos data base.
+      parameters:
+        - name: languageId
+          in: path
+          description: Id of language
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Delete a language matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postResponseDelete'
+        '500':
+          description: Internal Server Error  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+  '/externalfunctions/{exid}':
+    put:
+        tags:
+          - Admin
+        summary: Update external function by Id 
+        operationId: updateExternalFunction
+        description: By passing in the appropriate options, you can update external function in the VariaMos data base.
+        requestBody:
+          $ref: '#/components/requestBodies/postRequestUpdateDeleteExternalFunction'
+        parameters:
+          - name: exid
+            in: path
+            description: Id of external function
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Update external function matching criteria
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ResponsesExternalFunctionObject'
+          '500':
+            description: Internal Server Error  
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/responseError'
+    delete:
+        tags:
+          - Admin
+        summary: Delete external function by Id 
+        operationId: deleteExternalFunction
+        description: By passing in the appropriate options, you can delete a external function in the VariaMos data base.
+        parameters:
+          - name: exid
+            in: path
+            description: Id of external function
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Delete a language matching criteria
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/postResponseDelete'
+          '500':
+            description: Internal Server Error  
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/responseError'
+  '/languages/{languageType}':
+    get:
+      tags:
+        - Users
+      summary: search language by type 
+      operationId: getLanguageByType
+      description: By passing in the appropriate options, you can search for available language in the VariaMos data base.
+      parameters:
+        - name: languageType
+          in: path
+          description: Type of language
+          required: true
+          schema:
+            type: string
+          example: domain, application, adaptation
+      responses:
+        '200':
+          description: Search results languages matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getResponses'
+        '500':
+          description: Internal Server Error  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+  /languages/detail:
+    get:
+      tags:
+        - Users
+      summary: search language detail
+      operationId: getDetailLanguages
+      description: By passing in the appropriate options, you can search for available language detail in the VariaMos data base.
+      responses:
+        '200':
+          description: Search results languages detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsesDetail'
+        '500':
+          description: Internal Server Error 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError' 
+  '/languages/{languageType}/detail':
+    get:
+      tags:
+        - Users
+      summary: search language detail by type 
+      operationId: getDetailLanguageByType
+      description: By passing in the appropriate options, you can search for available language detail in the VariaMos data base.
+      parameters:
+        - name: languageType
+          in: path
+          description: Type of language
+          required: true
+          schema:
+            type: string
+          example: domain, application, adaptation
+      responses:
+        '200':
+          description: Search results languages matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsesDetail'
+        '500':
+          description: Internal Server Error  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+  '/languages/{languageId}/externalfunctions':
+    get:
+      tags:
+        - Users
+      summary: search external functions by language name 
+      operationId: getExternalFuntions
+      description: By passing in the appropriate options, you can search for available external functions in the VariaMos data base.
+      parameters:
+        - name: languageId
+          in: path
+          description: Name of language
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Search results external functions matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseExternalFunction'
+        '500':
+          description: Internal Server Error  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError'
+    post:
+      tags:
+        - Admin
+      summary: create new external function 
+      operationId: createExternalFunction
+      description: By passing in the appropriate options, you can create a new external function in the VariaMos data base.
+      parameters:
+        - name: languageId
+          in: path
+          description: Name of language
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/postRequestUpdateDeleteExternalFunction'
+      responses:
+        '200':
+          description: Search results languages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsesExternalFunctionObject'
+        '500':
+          description: Internal Server Error 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseError' 
+components:
+  schemas:
+    ResponseExternalFunction:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalFunctionItem'
+    postResponseDelete:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+    responseError:
+       type: object
+       properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+        errorCode:
+          type: string
+        data:
+          type: string
+    postResponseCreate:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+        data: 
+          $ref: '#/components/schemas/CreateLanguageItem'
+    postRequestCreate:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        data:
+          $ref: '#/components/schemas/CreateLanguageItem'
+    putRequestUpdate:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        data:
+          $ref: '#/components/schemas/UpdateLanguageItem'
+    putRequestExFUpdate:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        data:
+          $ref: '#/components/schemas/createUpdateExternalFunctionItem'
+    getResponses:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageItem'
+    ResponsesDetail:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageDetailItem'
+    ResponsesDetailObject:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+        data: 
+          $ref: '#/components/schemas/LanguageDetailItem'
+    ResponsesExternalFunctionObject:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        message:
+          type: string
+        data: 
+          $ref: '#/components/schemas/createUpdateExternalFunctionItem'
+    LanguageItem:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          example: Feature
+        type: 
+          type: string
+          example: DOMAIN
+    LanguageDetailItem:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          example: Feature
+        abstractSyntax:
+          type: object
+          example: {  }
+        concreteSyntax:
+          type: object
+          example: {  }  
+        type: 
+          type: string
+          example: DOMAIN
+        stateAccept: 
+          type: string
+          example: PENDING
+    ExternalFunctionItem:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        label:
+          type: string
+        url:
+          type: string
+        method:
+          type: string
+        header: 
+          type: object
+        request: 
+          type: object
+        resulting_action: 
+          type: string
+        language_id:
+          type: number
+    createUpdateExternalFunctionItem:
+      type: object
+      properties:
+        name:
+          type: string
+        label:
+          type: string
+        url:
+          type: string
+        method:
+          type: string
+        header: 
+          type: object
+        request: 
+          type: object
+        resulting_action: 
+          type: string
+        language_id:
+          type: number
+    UpdateLanguageItem:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Feature
+        abstractSyntax:
+          type: object
+          example: {  }
+        concreteSyntax:
+          type: object
+          example: {  }  
+        type: 
+          type: string
+          example: DOMAIN
+        stateAccept: 
+          type: string
+          example: PENDING
+    CreateLanguageItem:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Feature
+        abstractSyntax:
+          type: object
+          example: {  }
+        concreteSyntax:
+          type: object
+          example: {  }  
+        type: 
+          type: string
+          example: DOMAIN
+  requestBodies:
+    postRequestCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/postRequestCreate'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/postRequestCreate'
+      description: Language object that needs to be added to the variamos data base.
+      required: true
+    postRequestUpdate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/putRequestUpdate'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/putRequestUpdate'
+      description: Language object that needs to be updated to the variamos data base.
+      required: true
+    postRequestUpdateDeleteExternalFunction:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/putRequestExFUpdate'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/putRequestExFUpdate'
+      description: External function object that needs to be updated to the variamos data base.
+      required: true
+externalDocs:
+  description: View code on github
+  url: 'https://github.com'
