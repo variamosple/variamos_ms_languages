@@ -28,6 +28,10 @@ export const OrmLanguage = sequelize.define(
     stateAccept: {
       type: Sequelize.TEXT,
     },
+    //We add a new field for the semantics
+    semantics: {
+      type: Sequelize.JSONB,
+    },
   },
   {
     freezeTableName: true,
@@ -43,6 +47,8 @@ export class Language {
   concreteSyntax?: JSON;
   type?: string;
   stateAccept?: string;
+  //add semantics field
+  semantics?: JSON;
 
   constructor(
     id?: number,
@@ -50,7 +56,9 @@ export class Language {
     abstractSyntax?: JSON,
     concreteSyntax?: JSON,
     type?: string,
-    stateAccept?: string
+    stateAccept?: string,
+    // idem
+    semantics?: JSON,
   ) {
     this.id = id;
     this.name = name;
@@ -58,6 +66,8 @@ export class Language {
     this.concreteSyntax = concreteSyntax;
     this.type = type;
     this.stateAccept = stateAccept;
+    //idem
+    this.semantics = semantics;
   }
 }
 
@@ -70,7 +80,9 @@ export const LanguageSchema = {
     concreteSyntax: { type: "object" },
     type: { type: "string" },
     stateAccept: { type: "string" },
+    //add semantics
+    semantics: { type: "object" }
   },
-  required: ["name", "abstractSyntax", "concreteSyntax", "type"],
+  required: ["name", "abstractSyntax", "concreteSyntax", "type", "semantics"],
   additionalProperties: false,
 };

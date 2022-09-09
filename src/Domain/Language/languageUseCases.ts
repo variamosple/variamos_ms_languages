@@ -149,6 +149,8 @@ export default class LanguageManagement {
           "concreteSyntax",
           "type",
           "stateAccept",
+          //add semantics support
+          "semantics",
         ],
       });
 
@@ -203,6 +205,8 @@ export default class LanguageManagement {
           concreteSyntax: language.concreteSyntax,
           type: language.type,
           stateAccept: language.stateAccept,
+          //add semantics field
+          semantics: language.semantics,
         },
         {
           where: { id: language.id },
