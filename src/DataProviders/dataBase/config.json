@@ -3,14 +3,14 @@
     "username": "adminpg",
     "password": "D6w9yRIWw7r92opvkVzp1",
     "database": "VariamosDB",
-    "host": "variamos-db.postgres.database.azure.com",
+    "host": "db",
     "dialect": "postgres"
   },
   "production": {
     "username": "adminpg",
     "password": "D6w9yRIWw7r92opvkVzp1",
     "database": "VariamosDB",
-    "host": "variamos-db.postgres.database.azure.com",
+    "host": "db",
     "dialect": "postgres"
   }
 }
