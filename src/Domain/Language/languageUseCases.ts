@@ -19,7 +19,7 @@ export default class LanguageManagement {
     try {
       const searchLanguage = (await OrmLanguage.findAll()) as Language;
       const responseApi = new ResponseAPISuccess();
-      responseApi.message = "Language were found successfully";
+      responseApi.message = "Language were found successfully v2";
       responseApi.data = JSON.parse(JSON.stringify(searchLanguage));
       responseApi.transactionId = "getDetailLanguages_";
 
@@ -47,7 +47,7 @@ export default class LanguageManagement {
       })) as Language;
 
       const responseApi = new ResponseAPISuccess();
-      responseApi.message = "Language were found successfully";
+      responseApi.message = "Language were found successfully v2";
       responseApi.data = JSON.parse(JSON.stringify(searchLanguageByType));
       responseApi.transactionId = "getDetailLanguageByType_";
 
@@ -72,7 +72,7 @@ export default class LanguageManagement {
       })) as Language;
 
       const responseApi = new ResponseAPISuccess();
-      responseApi.message = "Language were found successfully";
+      responseApi.message = "Language were found successfully v2";
       responseApi.data = JSON.parse(JSON.stringify(searchLanguage));
       responseApi.transactionId = "getLanguages_";
 
