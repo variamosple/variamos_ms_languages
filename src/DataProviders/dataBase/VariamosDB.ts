@@ -7,5 +7,5 @@ export const pool = new Pool({
   password: "D6w9yRIWw7r92opvkVzp",
   database: "VariamosDB",
   port: 5432,
-  ssl: false,
+  ssl: true,
 });
