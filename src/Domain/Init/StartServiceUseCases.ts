@@ -11,6 +11,8 @@ app.use(
   })
 );
 
+// app.use(cors());
+
 app.use(express.json({limit:'60mb'}));
 app.use(express.urlencoded({ extended: true, limit: '60mb' }));
 app.use(indexRoutes);
@@ -20,6 +22,7 @@ async function init() {
 
   await app.listen(4000);
   console.log("Server on port", 4000);
+  console.log("this is the new version");
 }
 
 init();

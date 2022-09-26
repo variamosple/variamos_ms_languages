@@ -6,6 +6,7 @@ const sequelizeVariamos = new Sequelize(
   "D6w9yRIWw7r92opvkVzp",
   {
     host: "variamos-db.postgres.database.azure.com",
+    // host: "db",
     dialect: "postgres",
     pool: {
       max: 5,
