@@ -18,7 +18,6 @@ export default class LanguageManagement {
   ): Promise<Response> => {
     try {
       const searchLanguage = (await OrmLanguage.findAll()) as Language;
-      console.log(searchLanguage);
       const responseApi = new ResponseAPISuccess();
       responseApi.message = "Language were found successfully";
       responseApi.data = JSON.parse(JSON.stringify(searchLanguage));
