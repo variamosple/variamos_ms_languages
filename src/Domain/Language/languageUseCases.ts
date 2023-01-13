@@ -7,7 +7,8 @@ import {
   ResponseAPIError,
   ResponseAPISuccess,
 } from "../Init/entities/response";
-import { Language, LanguageSchema, OrmLanguage } from "./Entities/Language";
+import { Language, LanguageSchema, OrmLanguage, SearchLanguagesByTypeAndUser } from "./Entities/Language";
+ 
 
 const ajv = new Ajv();
 
@@ -114,6 +115,36 @@ export default class LanguageManagement {
         JSON.stringify("{ messageError: " + e + " }")
       );
       responseApi.transactionId = "getLanguageByType_";
+      console.log(JSON.stringify(responseApi));
+      return res.status(500).json(responseApi);
+    }
+  };
+  
+  getLanguageByTypeAndUser = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
+    try {
+      let type=req.params.type.toUpperCase() ;
+      console.log(type);
+      let userId=req.params.userId;
+      console.log(userId); 
+      const searchLanguageByType =(await  SearchLanguagesByTypeAndUser(type, userId));
+
+      const responseApi = new ResponseAPISuccess();
+      responseApi.message = "Language were found successfully";
+      responseApi.data = JSON.parse(JSON.stringify(searchLanguageByType[0]));
+      responseApi.transactionId = "getLanguageByTypeAndUser_";
+
+      return res.status(200).json(responseApi);
+    } catch (e) {
+      const responseApi = new ResponseAPIError();
+      responseApi.message = "Internal Server Error";
+      responseApi.errorCode = "06";
+      responseApi.data = JSON.parse(
+        JSON.stringify("{ messageError: " + e + " }")
+      );
+      responseApi.transactionId = "getLanguageByTypeAndUser_";
       console.log(JSON.stringify(responseApi));
       return res.status(500).json(responseApi);
     }

@@ -83,3 +83,8 @@ export const LanguageSchema = {
   required: ["name", "abstractSyntax", "concreteSyntax", "type", "semantics"],
   additionalProperties: false,
 };
+
+export function SearchLanguagesByTypeAndUser(type:string, userId:string){
+  let query = "select v.* from variamos.sp_view_languages('" + type + "', '" + userId + "' ) v" 
+  return sequelize.query(query);
+}
