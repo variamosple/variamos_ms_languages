@@ -46,6 +46,6 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'variamos-ms-languages'
-        slot-name: 'PRODUCTION'
-        publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILE}}
+        slot-name: 'production'
+        #publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILE}}
         images: 'variamos.azurecr.io/${{secrets.ACRUSERNAME}}/variamos_ms_languages:${{ github.sha }}'
