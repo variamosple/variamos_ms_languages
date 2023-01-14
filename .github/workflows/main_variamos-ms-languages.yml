@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'variamos-ms-languages'
         slot-name: 'production'
-        #publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILE}}
+        publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILE}}
         images: 'variamos.azurecr.io/${{secrets.ACRUSERNAME}}/variamos_ms_languages:${{ github.sha }}'
