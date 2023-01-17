@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:argon-alpine
 
 # update packages
 RUN apk update
