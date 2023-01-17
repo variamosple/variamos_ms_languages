@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:latest
 
 # update packages
 RUN apk update
