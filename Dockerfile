@@ -20,11 +20,12 @@ COPY ./ .
 
 # RUN npm install
 
-RUN npm i -g npm@9.1.1 && \
-    npm i && \
-    find /app/node_modules/ ! -user root | xargs chown root:root
+# RUN npm i -g npm@9.1.1 && \
+#     npm i && \
+#    find /app/node_modules/ ! -user root | xargs chown root:root
 
-# RUN npm install -g ts-node
+RUN npm install -g ts-node
+
 RUN npm run build
 
 EXPOSE 4000
