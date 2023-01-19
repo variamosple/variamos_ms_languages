@@ -1,5 +1,4 @@
-# FROM node:alpine
-FROM node:18.9.0-alpine3.15
+FROM node:alpine
 
 # update packages
 RUN apk update
@@ -11,9 +10,7 @@ WORKDIR /variaMosLenguageService
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# RUN npm install
-RUN npm i -g npm@9.1.1 && \
-    npm i
+RUN npm install
 
 # copy source code to /variaMosLenguageService/src folder
 COPY ./ . 
