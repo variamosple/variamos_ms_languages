@@ -16,6 +16,11 @@ const sequelizeVariamos = new Sequelize(
     dialectOptions: {
       ssl: true,
     },
+    define: {
+      charset: 'utf8',
+      collate: 'utf8_general_ci', 
+      timestamps: true
+    }
   }
 );
 export default sequelizeVariamos;

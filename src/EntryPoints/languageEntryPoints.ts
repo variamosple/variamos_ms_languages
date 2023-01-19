@@ -13,7 +13,7 @@ let _SessionManagement=new SessionManagement();
 router.get("/languages", _LanguageManagement.getLanguages);
 router.get("/languages/detail", _LanguageManagement.getDetailLanguages);
 router.get("/languages/:type", _LanguageManagement.getLanguageByType);
-router.get("/languages/:type/:userId", _LanguageManagement.getLanguageByTypeAndUser);
+//router.get("/languages/:type/:userId", _LanguageManagement.getLanguageByTypeAndUser);
 router.post("/languages", _LanguageManagement.createLanguage);
 router.put("/languages/:id", _LanguageManagement.updateLanguage);
 router.delete("/languages/:id", _LanguageManagement.deleteLanguage);
