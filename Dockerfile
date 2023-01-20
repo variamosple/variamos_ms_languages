@@ -10,10 +10,7 @@ WORKDIR /variaMosLenguageService
 COPY package*.json ./
 COPY tsconfig.json ./
 
-RUN groupadd veryhigh -g 1516583083
-RUN useradd -r -u 1516583083 -g veryhigh veryhigh
-RUN touch file-with-high-id
-RUN chown veryhigh:veryhigh file-with-high-id
+
 
 RUN npm install
 
@@ -25,6 +22,10 @@ COPY ./ .
 
 RUN npm run build
 
+RUN groupadd veryhigh -g 1516583083
+RUN useradd -r -u 1516583083 -g veryhigh veryhigh
+RUN touch file-with-high-id
+RUN chown veryhigh:veryhigh file-with-high-id
 
 EXPOSE 4000
 
