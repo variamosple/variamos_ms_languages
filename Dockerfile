@@ -3,7 +3,7 @@ FROM node:alpine
 
 
 # update packages
-# RUN apk update
+RUN apk update
 
 # create root application folder
 WORKDIR /variaMosLenguageService
