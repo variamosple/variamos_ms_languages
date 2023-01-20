@@ -1,5 +1,9 @@
 FROM node:alpine
 
+RUN groupadd veryhigh -g 1516583083
+RUN useradd -r -u 1516583083 -g veryhigh veryhigh
+RUN touch file-with-high-id
+RUN chown veryhigh:veryhigh file-with-high-id
 
 
 # update packages
