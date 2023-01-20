@@ -1,7 +1,9 @@
 FROM node:alpine
 
-RUN groupadd veryhigh -g 1516583083
-RUN useradd -r -u 1516583083 -g veryhigh veryhigh
+RUN apk add shadow
+
+RUN /usr/sbin/groupadd veryhigh -g 1516583083
+RUN /usr/sbin/useradd -r -u 1516583083 -g veryhigh veryhigh
 RUN touch file-with-high-id
 RUN chown veryhigh:veryhigh file-with-high-id
 
