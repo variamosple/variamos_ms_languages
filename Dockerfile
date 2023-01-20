@@ -1,5 +1,8 @@
 FROM node:alpine
 
+RUN chown -R root:root /home
+RUN chown -R root:root /var
+
 # update packages
 RUN apk update
 
@@ -22,10 +25,11 @@ COPY ./ .
 
 RUN npm run build
 
-RUN groupadd veryhigh -g 1516583083
-RUN useradd -r -u 1516583083 -g veryhigh veryhigh
-RUN touch file-with-high-id
-RUN chown veryhigh:veryhigh file-with-high-id
+
+# RUN groupadd veryhigh -g 1516583083
+# RUN useradd -r -u 1516583083 -g veryhigh veryhigh
+# RUN touch file-with-high-id
+# RUN chown veryhigh:veryhigh file-with-high-id
 
 EXPOSE 4000
 
