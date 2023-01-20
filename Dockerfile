@@ -2,7 +2,7 @@ FROM node:lts-bullseye-slim
  
 
 # update packages
-RUN apk update
+#RUN apk update
 
 # create root application folder
 WORKDIR /variaMosLenguageService
