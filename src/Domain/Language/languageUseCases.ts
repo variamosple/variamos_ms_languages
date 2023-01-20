@@ -66,6 +66,31 @@ export default class LanguageManagement {
     }
   };
 
+  getVersion = async (_req: Request, res: Response): Promise<Response> => {
+    try {
+      let version={
+        Version: "1.4.23.01.19.20"
+      }
+
+      const responseApi = new ResponseAPISuccess();
+      responseApi.message = "Language were found successfully v2";
+      responseApi.data = JSON.parse(JSON.stringify(version));;
+      responseApi.transactionId = "getLanguages_";
+
+      return res.status(200).json(responseApi);
+    } catch (e) {
+      const responseApi = new ResponseAPIError();
+      responseApi.message = "Internal Server Error";
+      responseApi.errorCode = "05";
+      responseApi.data = JSON.parse(
+        JSON.stringify("{ messageError: " + e + " }")
+      );
+      responseApi.transactionId = "getLanguages_";
+      console.log(JSON.stringify(responseApi));
+      return res.status(500).json(responseApi);
+    }
+  };
+
   getLanguages = async (_req: Request, res: Response): Promise<Response> => {
     try {
       const searchLanguage = (await OrmLanguage.findAll({
