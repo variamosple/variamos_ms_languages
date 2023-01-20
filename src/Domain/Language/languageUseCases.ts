@@ -69,7 +69,7 @@ export default class LanguageManagement {
   getVersion = async (_req: Request, res: Response): Promise<Response> => {
     try {
       let version={
-        Version: "1.4.23.01.19.20"
+        Version: "1.4.23.01.20.07"
       }
 
       const responseApi = new ResponseAPISuccess();
