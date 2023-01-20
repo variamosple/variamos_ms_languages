@@ -30,8 +30,8 @@ RUN npm run build
 # RUN touch file-with-high-id
 # RUN chown veryhigh:veryhigh file-with-high-id
 
-RUN chown -R root:root /home
-RUN chown -R root:root /var
+#RUN chown -R root:root /home
+#RUN chown -R root:root /var
 
 EXPOSE 4000
 
