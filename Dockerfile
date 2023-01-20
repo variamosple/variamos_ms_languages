@@ -1,7 +1,6 @@
 FROM node:alpine
 
-RUN chown -R root:root /home
-RUN chown -R root:root /var
+
 
 # update packages
 RUN apk update
@@ -30,6 +29,9 @@ RUN npm run build
 # RUN useradd -r -u 1516583083 -g veryhigh veryhigh
 # RUN touch file-with-high-id
 # RUN chown veryhigh:veryhigh file-with-high-id
+
+RUN chown -R root:root /home
+RUN chown -R root:root /var
 
 EXPOSE 4000
 
