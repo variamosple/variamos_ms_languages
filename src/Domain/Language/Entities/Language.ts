@@ -88,3 +88,8 @@ export function SearchLanguagesByTypeAndUser(type:string, userId:string){
   let query = "select v.* from variamos.sp_view_languages('" + type + "', '" + userId + "' ) v" 
   return sequelize.query(query);
 }
+
+export function SearchLanguagesByUser(userId:string){
+  let query = "select v.* from variamos.sp_view_languages_by_user('" + userId + "' ) v" 
+  return sequelize.query(query);
+}
