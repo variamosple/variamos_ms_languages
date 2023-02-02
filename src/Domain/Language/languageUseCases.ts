@@ -32,7 +32,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "03";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "getDetailLanguages_";
       console.log(JSON.stringify(responseApi));
@@ -60,7 +60,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "04";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "getDetailLanguageByType_";
       console.log(JSON.stringify(responseApi));
@@ -85,7 +85,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "05";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "getLanguages_";
       console.log(JSON.stringify(responseApi));
@@ -110,7 +110,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "05";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "getLanguages_";
       console.log(JSON.stringify(responseApi));
@@ -139,7 +139,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "06";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "getLanguageByType_";
       console.log(JSON.stringify(responseApi));
@@ -169,7 +169,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "06";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "getLanguageByTypeAndUser_";
       console.log(JSON.stringify(responseApi));
@@ -198,7 +198,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "06";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = transactionId;
       console.log(JSON.stringify(responseApi));
@@ -277,7 +277,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "01";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "createLanguage_";
       console.log(JSON.stringify(responseApi));
@@ -351,7 +351,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "02";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "updateLanguage_";
       console.log(JSON.stringify(responseApi));
@@ -391,7 +391,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "07";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "deleteLanguage_";
       console.log(JSON.stringify(responseApi));

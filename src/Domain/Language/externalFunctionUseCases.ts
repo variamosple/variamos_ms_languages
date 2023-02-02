@@ -36,7 +36,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "08";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "getExternalFuntions_";
       console.log(JSON.stringify(responseApi));
@@ -93,7 +93,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "10";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "createExternalFunction_";
       console.log(JSON.stringify(responseApi));
@@ -153,7 +153,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "02";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "updateExternalFunction_";
       console.log(JSON.stringify(responseApi));
@@ -181,7 +181,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "15";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = "deleteExternalFUnction";
       console.log(JSON.stringify(responseApi));

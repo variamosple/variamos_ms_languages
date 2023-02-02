@@ -53,7 +53,7 @@ export default class SessionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "01";
       responseApi.data = JSON.parse(
-        JSON.stringify("{ messageError: " + e + " }")
+        JSON.stringify('{"messageError": "' + e + '"}')
       );
       responseApi.transactionId = transactionId;
       console.log(JSON.stringify(responseApi));
