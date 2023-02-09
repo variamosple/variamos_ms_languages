@@ -12,6 +12,7 @@ export const RequestApiSchema = {
   properties: {
     transactionId: { type: "string" },
     data: { type: "object" },
+    user: { type: "string" },
   },
   required: ["transactionId", "data"],
   additionalProperties: false,
