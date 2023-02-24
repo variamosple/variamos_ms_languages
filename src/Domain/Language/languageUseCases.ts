@@ -8,7 +8,7 @@ import {
   ResponseAPISuccess,
 } from "../Init/entities/response";
 import { Language, LanguageSchema, OrmLanguage, SearchLanguagesByTypeAndUser, SearchLanguagesByUser } from "./Entities/Language";
-import { UserLanguage, UserLanguageSchema, OrmUserLanguage, } from "./Entities/UserLanguage";
+import { UserLanguage, UserLanguageSchema, OrmUserLanguage, SearchUserPermissions } from "./Entities/UserLanguage";
 import { User, UserSchema, OrmUser } from "../Session/Entities/User";
 
 
@@ -219,7 +219,7 @@ export default class LanguageManagement {
 
       let language: Language = new Language();
       language = Object.assign(language, req.body.data);
-      language.stateAccept="PENDING";
+      language.stateAccept = "PENDING";
 
       validate = ajv.compile(LanguageSchema);
       valid = validate(req.body.data);
@@ -231,14 +231,31 @@ export default class LanguageManagement {
 
       let userId = req.body.user;
 
-      let user: any = (await OrmUser.findOne({
-        where: {
-          id: userId
-        },
-      }));
-
-      if (!user) {
+      const permissions = (await SearchUserPermissions(userId))[0];
+      if (!permissions) {
         throw "You are not authorized to create this record."
+      }
+      if (permissions.length == 0) {
+        throw "You are not authorized to create this record."
+      }
+
+      let permissionApproveLanguages = false;
+      let permissionCreateLanguages = false;
+      for (let i = 0; i < permissions.length; i++) {
+        let element: any = permissions[i];
+        if (element.id == 1) {
+          permissionCreateLanguages = true;
+        }
+        else if (element.id == 2) {
+          permissionApproveLanguages = true;
+        }
+      }
+
+      if (!permissionApproveLanguages) {
+        if (!permissionCreateLanguages) {
+          throw "You are not authorized to create this record."
+        } 
+        language.stateAccept = "PENDING";
       }
 
       let newLanguage: any = await OrmLanguage.create(language, {
@@ -255,7 +272,7 @@ export default class LanguageManagement {
 
       let userLanguage: UserLanguage = new UserLanguage();
       userLanguage.language_id = newLanguage.id;
-      userLanguage.user_id = user.id;
+      userLanguage.user_id = userId;
 
       let newUserLanguage = await OrmUserLanguage.create(userLanguage, {
         fields: [
@@ -299,7 +316,6 @@ export default class LanguageManagement {
       let language: Language = new Language();
       language = Object.assign(language, req.body.data);
       language.id = parseInt(req.params.id);
-      language.stateAccept="PENDING";
 
       validate = ajv.compile(LanguageSchema);
       valid = validate(req.body.data);
@@ -311,16 +327,42 @@ export default class LanguageManagement {
 
       const userId = req.body.user;
 
-      let userLanguage = (await OrmUserLanguage.findOne({
-        where: {
-          user_id: userId,
-          language_id: language.id,
-        },
-      })) as UserLanguage;
-
-      if (!userLanguage) {
+      const permissions = (await SearchUserPermissions(userId))[0];
+      if (!permissions) {
         throw "You are not authorized to modify this record."
       }
+      if (permissions.length == 0) {
+        throw "You are not authorized to modify this record."
+      }
+
+      let permissionApproveLanguages = false;
+      let permissionCreateLanguages = false;
+      for (let i = 0; i < permissions.length; i++) {
+        let element: any = permissions[i];
+        if (element.id == 1) {
+          permissionCreateLanguages = true;
+        }
+        else if (element.id == 2) {
+          permissionApproveLanguages = true;
+        }
+      }
+
+      if (!permissionApproveLanguages) {
+        if (!permissionCreateLanguages) {
+          throw "You are not authorized to modify this record."
+        }
+        let userLanguage = (await OrmUserLanguage.findOne({
+          where: {
+            user_id: userId,
+            language_id: language.id,
+          },
+        })) as UserLanguage; 
+        if (!userLanguage) {
+          throw "You are not authorized to modify this record."
+        }
+        language.stateAccept = "PENDING";
+      }
+
 
       let updateLanguage = await OrmLanguage.update(
         {
@@ -364,16 +406,40 @@ export default class LanguageManagement {
       const id = parseInt(req.params.id);
       const userId = req.params.userId;
 
-      let userLanguage = (await OrmUserLanguage.findOne({
-        where: {
-          user_id: userId,
-          language_id: id,
-        },
-      })) as UserLanguage;
-
-      if (!userLanguage) {
+      const permissions = (await SearchUserPermissions(userId))[0];
+      if (!permissions) {
         throw "You are not authorized to delete this record."
       }
+      if (permissions.length == 0) {
+        throw "You are not authorized to delete this record."
+      }
+
+      let permissionApproveLanguages = false;
+      let permissionCreateLanguages = false;
+      for (let i = 0; i < permissions.length; i++) {
+        let element: any = permissions[i];
+        if (element.id == 1) {
+          permissionCreateLanguages = true;
+        }
+        else if (element.id == 2) {
+          permissionApproveLanguages = true;
+        }
+      }
+
+      if (!permissionApproveLanguages) {
+        if (!permissionCreateLanguages) {
+          throw "You are not authorized to delete this record."
+        }
+        let userLanguage = (await OrmUserLanguage.findOne({
+          where: {
+            user_id: userId,
+            language_id: id,
+          },
+        })) as UserLanguage; 
+        if (!userLanguage) {
+          throw "You are not authorized to delete this record."
+        } 
+      } 
 
       const deleteLanguage = (await OrmLanguage.destroy({
         where: { id: id },

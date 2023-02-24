@@ -45,3 +45,9 @@ export const UserLanguageSchema = {
   required: ["user_id", "language_id"],
   additionalProperties: false,
 }; 
+
+
+export function SearchUserPermissions(userId:string){
+  let query = "SELECT v.* from variamos.sp_view_permissions_by_user('" + userId + "') v" 
+  return sequelize.query(query);
+}
