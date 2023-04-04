@@ -24,8 +24,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm run build
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -45,6 +44,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: node-app
+          path: dist
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -54,6 +54,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_286489E8FDB546BBB79EF5FED847246E }}
           package: .
-
-      - name: Start app
-        run: npm run start
