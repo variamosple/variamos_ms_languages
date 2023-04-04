@@ -1,5 +1,6 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
+# Last updated: 20230117:6:09
 
 name: Build and deploy container app to Azure Web App - variamos-ms-languages
 
@@ -22,15 +23,15 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry: https://variamos.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_3a870c596ba04a6482c6df1f0bc6da10 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_b0b38ff56cae41eb86b54e913fe50cb6 }}
+        registry: variamos.azurecr.io
+        username: ${{secrets.ACRUSERNAME}}
+        password: ${{secrets.ACRUSERPASSWORD}}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: variamos.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3a870c596ba04a6482c6df1f0bc6da10 }}/variamos/variamos_ms_languages:${{ github.sha }}
+        tags: variamos.azurecr.io/${{secrets.ACRUSERNAME}}/variamos_ms_languages:latest
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +48,5 @@ jobs:
       with:
         app-name: 'variamos-ms-languages'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_eede73805f434979809cbaa21f85d006 }}
-        images: 'variamos.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_3a870c596ba04a6482c6df1f0bc6da10 }}/variamos/variamos_ms_languages:${{ github.sha }}'
+        publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILE}}
+        images: 'variamos.azurecr.io/${{secrets.ACRUSERNAME}}/variamos_ms_languages:latest'
