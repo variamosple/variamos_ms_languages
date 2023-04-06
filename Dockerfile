@@ -1,4 +1,5 @@
-FROM node:lts-bullseye-slim
+# FROM node:lts-bullseye-slim
+FROM node:16-alpine
  
 
 # update packages
@@ -11,7 +12,7 @@ WORKDIR /variaMosLenguageService
 COPY package*.json ./
 COPY tsconfig.json ./
 
-
+# COPY dist/ ./dist
 
 RUN npm install
 
