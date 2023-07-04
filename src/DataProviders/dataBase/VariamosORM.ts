@@ -3,9 +3,9 @@ import { Sequelize } from "sequelize";
 const sequelizeVariamos = new Sequelize(
   "VariamosDB",
   "adminpg",
-  "D6w9yRIWw7r92opvkVzp",
+  "a=m=8hos.G!-s<*M1G",
   {
-    host: "variamos-db.postgres.database.azure.com",
+    host: "variamos-db-2023.postgres.database.azure.com",
     // host: "db",
     dialect: "postgres",
     pool: {
