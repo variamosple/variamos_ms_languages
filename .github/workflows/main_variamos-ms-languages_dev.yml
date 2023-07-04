@@ -46,7 +46,7 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'variamos-ms-languages-2024'
+        app-name: 'variamos-ms-languages2024'
         slot-name: 'production'
         publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILEDEV}}
         images: '${{vars.ACRDEV}}/${{secrets.ACRUSERNAMEDEV}}/variamos_ms_languages:latest'
