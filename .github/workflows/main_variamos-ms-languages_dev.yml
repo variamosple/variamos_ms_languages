@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # Last updated: 20230623:22:32
 
-name: Build and deploy container app to Azure Web App - variamos-ms-languages
+name: Build and deploy container app to Azure Web App - variamos-ms-languages-dev
 
 on:
   push:
@@ -23,15 +23,15 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry: ${{vars.ACR}}
-        username: ${{secrets.ACRUSERNAME}}
-        password: ${{secrets.ACRUSERPASSWORD}}
+        registry: ${{vars.ACRDEV}}
+        username: ${{secrets.ACRUSERNAMEDEV}}
+        password: ${{secrets.ACRUSERPASSWORDDEV}}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ${{vars.ACR}}/${{secrets.ACRUSERNAME}}/variamos_ms_languages:latest
+        tags: ${{vars.ACRDEV}}/${{secrets.ACRUSERNAMEDEV}}/variamos_ms_languages:latest
         file: ./Dockerfile
 
   deploy:
@@ -46,7 +46,7 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'variamos-ms-languages-2023'
+        app-name: 'variamos-ms-languages-2024'
         slot-name: 'production'
-        publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILE}}
-        images: '${{vars.ACR}}/${{secrets.ACRUSERNAME}}/variamos_ms_languages:latest'
+        publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILEDEV}}
+        images: '${{vars.ACRDEV}}/${{secrets.ACRUSERNAMEDEV}}/variamos_ms_languages:latest'
