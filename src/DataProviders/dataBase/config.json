@@ -3,14 +3,14 @@
     "username": "adminpg",
     "password": "a=m=8hos.G!-s<*M1G",
     "database": "VariamosDB",
-    "host": "variamos-db-2023.postgres.database.azure.com",
+    "host": "variamos-db-2024.postgres.database.azure.com",
     "dialect": "postgres"
   },
   "production": {
     "username": "adminpg",
     "password": "a=m=8hos.G!-s<*M1G",
     "database": "VariamosDB",
-    "host": "variamos-db-2023.postgres.database.azure.com",
+    "host": "variamos-db-2024.postgres.database.azure.com",
     "dialect": "postgres"
   }
 }

@@ -5,7 +5,7 @@ const sequelizeVariamos = new Sequelize(
   "adminpg",
   "a=m=8hos.G!-s<*M1G",
   {
-    host: "variamos-db-2023.postgres.database.azure.com",
+    host: "variamos-db-2024.postgres.database.azure.com",
     // host: "db",
     dialect: "postgres",
     pool: {
