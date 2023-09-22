@@ -1,12 +1,12 @@
 import { Sequelize } from "sequelize";
+import { Config } from "../../Config";
 
 const sequelizeVariamos = new Sequelize(
-  "VariamosDB",
-  "adminpg",
-  "a=m=8hos.G!-s<*M1G",
+  Config.DB.DATABASE,
+  Config.DB.USER,
+  Config.DB.PASSWORD,
   {
-    host: "variamos-db-2024.postgres.database.azure.com",
-    // host: "db",
+    host: Config.DB.HOST, 
     dialect: "postgres",
     pool: {
       max: 5,
@@ -14,7 +14,7 @@ const sequelizeVariamos = new Sequelize(
       idle: 10000,
     },
     dialectOptions: {
-      ssl: true,
+      ssl: Config.DB.SSL,
     },
     define: {
       charset: 'utf8',

@@ -47,7 +47,9 @@ This module requires the following modules:
 
 * Compile: npm run build
 
-* Run: npm start
+* Run production: npm start or npm run prod
+
+* Run development: npm run dev
 
 
 

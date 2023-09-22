@@ -9,7 +9,8 @@ import {
 } from "../Init/entities/response";
 import { Language, LanguageSchema, OrmLanguage, SearchLanguagesByTypeAndUser, SearchLanguagesByUser } from "./Entities/Language";
 import { UserLanguage, UserLanguageSchema, OrmUserLanguage, SearchUserPermissions } from "./Entities/UserLanguage";
-import { User, UserSchema, OrmUser } from "../Session/Entities/User";
+import { User, UserSchema, OrmUser } from "../Session/Entities/User"; 
+import { Config } from "../../Config";
 
 
 const ajv = new Ajv();
@@ -36,7 +37,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "getDetailLanguages_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -64,7 +65,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "getDetailLanguageByType_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -72,7 +73,8 @@ export default class LanguageManagement {
     try {
       let version = {
         Application: "variamos_ms_languages",
-        Version: "1.23.09.22.04"
+        Version: Config.VERSION,
+        Environment: Config.NODE_ENV
       } 
       return res.status(200).json(version);
     } catch (e) {
@@ -109,7 +111,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "getLanguages_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -138,7 +140,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "getLanguageByType_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -168,7 +170,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "getLanguageByTypeAndUser_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -197,7 +199,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = transactionId;
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -293,7 +295,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "createLanguage_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -392,7 +394,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "updateLanguage_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 
@@ -456,7 +458,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "deleteLanguage_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 }
