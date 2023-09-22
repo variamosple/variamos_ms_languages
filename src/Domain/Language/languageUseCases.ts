@@ -71,15 +71,10 @@ export default class LanguageManagement {
   getVersion = async (_req: Request, res: Response): Promise<Response> => {
     try {
       let version = {
-        Version: "1.23.04.06.04"
-      }
-
-      const responseApi = new ResponseAPISuccess();
-      responseApi.message = "Language were found successfully v2";
-      responseApi.data = JSON.parse(JSON.stringify(version));;
-      responseApi.transactionId = "getLanguages_";
-
-      return res.status(200).json(responseApi);
+        Application: "variamos_ms_languages",
+        Version: "1.23.09.22.04"
+      } 
+      return res.status(200).json(version);
     } catch (e) {
       const responseApi = new ResponseAPIError();
       responseApi.message = "Internal Server Error";
@@ -89,7 +84,7 @@ export default class LanguageManagement {
       );
       responseApi.transactionId = "getLanguages_";
       console.log(JSON.stringify(responseApi));
-      return res.status(500).json(responseApi);
+      return res.status(400).json(responseApi);
     }
   };
 

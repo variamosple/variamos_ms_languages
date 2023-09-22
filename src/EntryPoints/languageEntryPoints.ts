@@ -10,6 +10,8 @@ let _LanguageManagement = new LanguageManagement();
 let _ExternalFunctionManagement = new ExternalFunctionManagement();
 let _SessionManagement=new SessionManagement();
 
+router.get("/", _LanguageManagement.getVersion);
+
 router.get("/version", _LanguageManagement.getVersion);
 router.get("/languages", _LanguageManagement.getLanguages);
 router.get("/languages/detail", _LanguageManagement.getDetailLanguages);

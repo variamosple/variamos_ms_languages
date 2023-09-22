@@ -43,12 +43,12 @@ This module requires the following modules:
 
 ## INSTALLATION
  
-* Install as you would normally install a contributed Drupal module. Visit
-  https://www.drupal.org/documentation/install/modules-themes/modules-7 for
-  further information.
+* npm install
 
-* You may want to disable Toolbar module, since its output clashes with
-  Administration Menu.
+* Compile: npm run build
+
+* Run: npm start
+
 
 
 ## CONFIGURATION
