@@ -1,6 +1,16 @@
 # FROM node:lts-bullseye-slim
 FROM node:16-alpine
- 
+
+# ENV
+
+ENV NODE_ENV=$NODE_ENV
+ENV PORT=$PORT
+ENV DB_HOST=$DB_HOST
+ENV DB_DATABASE=$DB_DATABASE 
+ENV DB_PORT=$DB_PORT 
+ENV DB_SSL=$DB_SSL 
+ENV DB_USER=$DB_USER 
+ENV DB_PASSWORD=$DB_PASSWORD
 
 # update packages
 #RUN apk update
