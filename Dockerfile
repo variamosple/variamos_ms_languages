@@ -3,25 +3,23 @@ FROM node:16-alpine
 
 # Arguments
 
-ARG NODE_ENV
-ARG PORT
+ARG PORT=4000
 ARG DB_HOST
-ARG DB_DATABASE
-ARG DB_PORT
-ARG DB_SSL
+ARG DB_DATABASE=VariamosDB
+ARG DB_PORT=5432
+ARG DB_SSL=true
 ARG DB_USER
 ARG DB_PASSWORD
 
 # Enviroment Vars
 
-ENV NODE_ENV=${NODE_ENV}
-ENV PORT=${PORT}
+ENV PORT=${DB_PORT}
 ENV DB_HOST=${DB_HOST}
 ENV DB_DATABASE=${DB_DATABASE} 
-ENV DB_PORT=${DB_PORT} 
-ENV DB_SSL=${DB_SSL} 
+ENV DB_PORT=${DB_PORT}
+ENV DB_SSL=${DB_SSL}
 ENV DB_USER=${DB_USER} 
-ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_PASSWORD={DB_PASSWORD}
 
 # update packages
 #RUN apk update
@@ -36,6 +34,8 @@ COPY tsconfig.json ./
 # COPY dist/ ./dist
 
 RUN npm install
+# RUN npm install -g typescript
+# RUN npm i --save-dev @types/node
 
 # copy source code to /variaMosLenguageService/src folder
 COPY ./ . 
