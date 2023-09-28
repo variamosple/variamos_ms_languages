@@ -30,6 +30,15 @@ jobs:
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
+        context: .
+        build-args: |
+          "NODE_ENV=production"
+          "DB_HOST=${{ secrets.DEV_DB_HOST }}"
+          "DB_DATABASE=${{ secrets.DEV_DB_DATABASE }}"
+          "DB_PORT=${{ secrets.DEV_DB_PORT }}"
+          "DB_SSL=${{ secrets.DEV_DB_SSL }}"
+          "DB_USER=${{ secrets.DEV_DB_USER }}"
+          "DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}"
         push: true
         tags: ${{vars.ACRDEV}}/${{secrets.ACRUSERNAMEDEV}}/variamos_ms_languages:latest
         file: ./Dockerfile
