@@ -1,7 +1,18 @@
 # FROM node:lts-bullseye-slim
 FROM node:16-alpine
 
-# ENV
+# Arguments
+
+ARG NODE_ENV
+ARG PORT
+ARG DB_HOST
+ARG DB_DATABASE
+ARG DB_PORT
+ARG DB_SSL
+ARG DB_USER
+ARG DB_PASSWORD
+
+# Enviroment Vars
 
 ENV NODE_ENV=$NODE_ENV
 ENV PORT=$PORT
