@@ -12,7 +12,7 @@ export const Config = {
     NODE_ENV: process.env.NODE_ENV || 'development',
     HOST: process.env.HOST || '127.0.0.1',
     PORT: process.env.PORT || 4000,
-    VERSION: "1.23.09.29.05",
+    VERSION: "1.23.09.29.10",
     DB: {
         USER: "adminpg",
         HOST: "variamos-db-2024.postgres.database.azure.com",
