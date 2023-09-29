@@ -14,11 +14,11 @@ export const Config = {
     PORT: process.env.PORT || 4000,
     VERSION: "1.23.09.29.11",
     DB: {
-        USER: "adminpg",
-        HOST: "variamos-db-2024.postgres.database.azure.com",
-        PASSWORD: "a=m=8hos.G!-s<*M1G" ,
-        DATABASE: "VariamosDB",
-        PORT: 5432,
-        SSL: true
+      USER: process.env.DB_USER || "DB_USER",
+      HOST: process.env.DB_HOST || "DB_HOST",
+      PASSWORD: process.env.DB_PASSWORD || "DB_PASSWORD",
+      DATABASE: process.env.DB_DATABASE || "DB_DATABASE",
+      PORT: process.env.DB_PORT || 5432,
+      SSL: process.env.DB_SSL || true
     }
 }
