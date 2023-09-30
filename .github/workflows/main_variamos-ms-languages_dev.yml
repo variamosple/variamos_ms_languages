@@ -2,12 +2,12 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # Last updated: 20230623:22:32
 
-name: Build and deploy container app to Azure Web App - variamos-ms-languages-dev
+name: Build and deploy container app to Azure Web App - variamos-ms-languages-prod
 
 on:
   push:
     branches:
-      - main
+      - none
   workflow_dispatch:
 
 jobs:
@@ -23,24 +23,24 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v1
       with:
-        registry: ${{vars.ACRDEV}}
-        username: ${{secrets.ACRUSERNAMEDEV}}
-        password: ${{secrets.ACRUSERPASSWORDDEV}}
+        registry: ${{vars.ACR}}
+        username: ${{secrets.ACRUSERNAME}}
+        password: ${{secrets.ACRUSERPASSWORD}}
 
     - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v2
       with:
         context: .
         build-args: |
-          NODE_ENV=production 
-          DB_HOST=${{ secrets.DEV_DB_HOST }} 
-          DB_DATABASE=${{ secrets.DEV_DB_DATABASE }} 
-          DB_PORT=${{ secrets.DEV_DB_PORT }} 
-          DB_SSL=${{ secrets.DEV_DB_SSL }} 
-          DB_USER=${{ secrets.DEV_DB_USER }} 
-          DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} 
+          "NODE_ENV=production"
+          "DB_HOST=${{ secrets.PDN_DB_HOST }}"
+          "DB_DATABASE=${{ secrets.PDN_DB_DATABASE }}"
+          "DB_PORT=${{ secrets.PDN_DB_PORT }}"
+          "DB_SSL=${{ secrets.PDN_DB_SSL }}"
+          "DB_USER=${{ secrets.PDN_DB_USER }}"
+          "DB_PASSWORD=${{ secrets.PDN_DB_PASSWORD }}"
         push: true
-        tags: ${{vars.ACRDEV}}/${{secrets.ACRUSERNAMEDEV}}/variamos_ms_languages:latest
+        tags: ${{vars.ACR}}/${{secrets.ACRUSERNAME}}/variamos_ms_languages:latest
         file: ./Dockerfile
 
   deploy:
@@ -55,7 +55,7 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'variamos-ms-languages2024'
+        app-name: 'variamos-ms-languages-2023'
         slot-name: 'production'
-        publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILEDEV}}
-        images: '${{vars.ACRDEV}}/${{secrets.ACRUSERNAMEDEV}}/variamos_ms_languages:latest'
+        publish-profile: ${{secrets.PRODUCTIONSLOTPUBLISHPROFILE}}
+        images: '${{vars.ACR}}/${{secrets.ACRUSERNAME}}/variamos_ms_languages:latest'
