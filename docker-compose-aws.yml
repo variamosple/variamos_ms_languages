@@ -1,0 +1,52 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services: 
+
+  dbaws:
+    image: postgres:15.3
+    container_name: variamos_db_aws
+    hostname: variamos_db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_SSL: "true"
+    ports:
+      - "5433:${DB_PORT}"
+    volumes:
+      - variamos_pgdata_aws:/var/lib/postgresql/data
+    networks:
+      - variamosnet_aws
+
+  admineraws:
+    image: adminer
+    container_name: variamos_pgadmin_aws
+    hostname: variamos_pgadmin
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - variamosnet_aws
+
+  variamosmslanguagesaws:
+    image: jasotov/variamos_ms_languages:latest
+    container_name: variamos_ms_languages_aws
+    hostname: variamos_ms_languages
+    ports:
+      - 4000:4000
+    networks:
+      - variamosnet_aws
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_DATABASE=${DB_DATABASE} 
+      - DB_PORT=${DB_PORT}
+      - DB_SSL=${DB_SSL}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+
+networks:
+  variamosnet_aws:
+  
+volumes:
+  variamos_pgdata_aws:
