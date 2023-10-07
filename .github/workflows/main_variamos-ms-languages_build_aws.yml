@@ -2,12 +2,12 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # Last updated: 20230623:22:32
 
-name: Build and deploy container app to Azure Web App - variamos-ms-languages-prod
+name: Build and push the image  of variamos-ms-languages to docker.io app - AWS
 
 on:
   push:
     branches:
-      - none
+      - develop
   workflow_dispatch:
 
 jobs:
