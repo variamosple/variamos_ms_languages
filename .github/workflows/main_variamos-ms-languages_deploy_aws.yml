@@ -7,12 +7,12 @@ name: Deploy all services on the AWS Server - AWS
 on:
   push:
     branches:
-      - none
+      - develop
   workflow_dispatch:
 
 jobs:
   deploy-docker-compose:
-    runs-on: 'aws-linux-runner'
+    runs-on: 'Variamos-AWS'
 
     steps:
     - uses: actions/checkout@v2
