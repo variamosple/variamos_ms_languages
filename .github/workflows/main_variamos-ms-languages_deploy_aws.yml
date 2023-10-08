@@ -7,7 +7,7 @@ name: Deploy all services on the AWS Server - AWS
 on:
   push:
     branches:
-      - develop
+      - none
   workflow_dispatch:
 
 jobs:
