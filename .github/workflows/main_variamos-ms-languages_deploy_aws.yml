@@ -1,0 +1,21 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# Last updated: 20230623:22:32
+
+name: Deploy all services on the AWS Server - AWS
+
+on:
+  push:
+    branches:
+      - none
+  workflow_dispatch:
+
+jobs:
+  deploy-docker-compose:
+    runs-on: 'aws-linux-runner'
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: isbang/compose-action@v1.5.1
+      with:
+        compose-file: "./docker-compose-aws.yml"
