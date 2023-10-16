@@ -14,7 +14,7 @@ const sequelizeVariamos = new Sequelize(
       idle: 10000,
     },
     dialectOptions: {
-      ssl: Config.DB.SSL,
+      ssl: false,
     },
     define: {
       charset: 'utf8',
