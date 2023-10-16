@@ -29,6 +29,16 @@ services:
     networks:
       - variamosnet_aws
 
+  variamospleaws:
+    image: jasotov/variamosple:latest
+    container_name: variamos_ms_languages_aws
+    hostname: variamosple
+    ports:
+      - 8000:8000
+    networks:
+      - variamosnet_aws
+    environment:
+
   variamosmslanguagesaws:
     image: jasotov/variamos_ms_languages:latest
     container_name: variamos_ms_languages_aws
