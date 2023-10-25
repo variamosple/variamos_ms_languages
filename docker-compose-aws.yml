@@ -43,7 +43,7 @@ services:
     container_name: variamos_ms_languages_aws
     hostname: variamos_ms_languages
     ports:
-      - 4000:4000
+      - 6000:4000
     networks:
       - variamosnet_aws
     environment:
@@ -59,7 +59,7 @@ services:
     container_name: variamoslanguages_aws
     hostname: variamoslanguages
     ports:
-      - 5000:4000
+      - 4000:3000
     networks:
       - variamosnet_aws
     environment:
