@@ -77,6 +77,8 @@ export default class ExternalFunctionManagement {
           "header",
           "resulting_action",
           "language_id",
+          "visible",
+          "call_on_properties_changed",
         ],
       });
 
@@ -133,6 +135,8 @@ export default class ExternalFunctionManagement {
           header: extFunction.header,
           resulting_action: extFunction.resulting_action,
           language_id: extFunction.language_id,
+          visible: extFunction.visible,
+          call_on_properties_changed: extFunction.call_on_properties_changed,
         },
         {
           where: { id: extFunction.id },
