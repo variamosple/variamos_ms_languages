@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: 'variamos-aws-02'
+    runs-on: 'aws-self-hosted'
 
     steps:
     - uses: actions/checkout@v2
