@@ -3,7 +3,7 @@
 # Last updated: 20230623:22:32
 
 # name: Build and push the image  of variamos-ms-languages to docker.io app - AWS
-name: Publish image to Docker Hub from develop branch
+name: Publish image to Docker Hub from develop branch.
 
 on:
   push:
