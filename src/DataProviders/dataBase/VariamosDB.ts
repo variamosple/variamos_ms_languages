@@ -7,5 +7,5 @@ export const pool = new Pool({
   password: Config.DB.PASSWORD,
   database: Config.DB.DATABASE,
   port: Number(Config.DB.PORT) ,
-  ssl: Boolean(Config.DB.SSL),
+  ssl: false,
 });
