@@ -9,6 +9,8 @@ export class ExternalFunction {
   header?: object;
   resulting_action?: string;
   language_id?: number;
+  visible?: number;
+  call_on_properties_changed?: number;
 
   constructor(
     id?: number,
@@ -17,7 +19,9 @@ export class ExternalFunction {
     url?: string,
     header?: object,
     resulting_action?: string,
-    language_id?: number
+    language_id?: number,
+    visible?: number,
+    call_on_properties_changed?: number
   ) {
     this.id = id;
     this.name = name;
@@ -26,6 +30,8 @@ export class ExternalFunction {
     this.header = header;
     this.resulting_action = resulting_action;
     this.language_id = language_id;
+    this.visible = visible;
+    this.call_on_properties_changed = call_on_properties_changed;
   }
 }
 
@@ -44,6 +50,8 @@ export const OrmExternalFunction = sequelize.define(
     header: { type: Sequelize.JSONB },
     resulting_action: { type: Sequelize.TEXT },
     language_id: { type: Sequelize.INTEGER },
+    visible: { type: Sequelize.INTEGER },
+    call_on_properties_changed: { type: Sequelize.INTEGER },
   },
   {
     freezeTableName: true,
@@ -62,6 +70,8 @@ export const ExternalFunctionSchema = {
     header: { type: "object" },
     resulting_action: { type: "string" },
     language_id: { type: "number" },
+    visible: { type: "number" },
+    call_on_properties_changed: { type: "number" },
   },
   required: ["name", "label", "url", "resulting_action"],
   additionalProperties: false,
