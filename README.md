@@ -123,3 +123,10 @@ This project has been sponsored by:
   Specialized in consulting and planning of Drupal powered sites, UNLEASHED MIND
   offers installation, development, theming, customization, and hosting to get
   you started. Visit https://www.unleashedmind.com for more information.
+
+
+
+  para depurar:
+  npm run build
+  ubicarse en la carpeta dist para poner los puntos de interrupción
+  abrir el archivo dist\EntryPoints\languageEntryPoints.js y run

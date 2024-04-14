@@ -19,7 +19,7 @@ export class SessionDao{
     "inner join variamos.role r on r.id = rp.role_id " +
     "inner join variamos.user_role ur on ur.role_id=r.id " +
     "inner join variamos.user u on u.id=ur.user_id and u.id='" + userId + "' " +
-    "group by p.id, p.name" 
+    "group by p.id, p.name"; 
     return sequelize.query(query);
   }
   
@@ -28,7 +28,6 @@ export class SessionDao{
       fields: [
         "id",
         "user",
-        "pwd",
         "name",
         "email"
       ]

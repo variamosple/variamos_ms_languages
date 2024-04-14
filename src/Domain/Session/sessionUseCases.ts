@@ -24,11 +24,11 @@ export default class SessionManagement {
       let user: User;
       let users = (await sessionDao.SelectUserByEmail(data.email))[0];
       if (users.length > 0) {
-        user = new User("", "", "", "", "");
+        user = new User("", "", "", "");
         user = Object.assign(user, users[0]);
       } else {
         let id=this.generateUUID();
-        user = new User(id, data.name, id, data.name, data.email)
+        user = new User(id, data.name, data.name, data.email)
         await sessionDao.CreateUser(user);
       }
 

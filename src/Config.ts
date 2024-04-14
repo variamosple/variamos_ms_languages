@@ -12,7 +12,7 @@ export const Config = {
     NODE_ENV: process.env.NODE_ENV || 'development',
     HOST: process.env.HOST || '127.0.0.1',
     PORT: process.env.PORT || 4000,
-    VERSION: "1.23.11.07.17",
+    VERSION: "1.24.04.14.14",
     DB: {
       USER: process.env.DB_USER || "db_user_test",
       HOST: process.env.DB_HOST || "db_host_test",
