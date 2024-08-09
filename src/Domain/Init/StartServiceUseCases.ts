@@ -1,6 +1,5 @@
 import express from "express";
 import { Config } from "../../Config";
-import sequelizeVariamos from "../../DataProviders/dataBase/VariamosORM";
 import indexRoutes from "../../EntryPoints/languageEntryPoints";
 import languagesV2Router, { LANGUAGES_V2_ROUTE } from '../../EntryPoints/languagesV2EntryPoints';
 import usersV2Router, { USERS_V2_ROUTE } from '../../EntryPoints/usersV2EntryPoints';
