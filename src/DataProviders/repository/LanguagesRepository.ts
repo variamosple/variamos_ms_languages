@@ -6,6 +6,7 @@ import { LanguageElementDraw } from '../../Domain/Language/Entities/LanguageElem
 import { LanguageFilter } from '../../Domain/Language/Entities/LanguageFilter';
 import { LanguageSemantic } from '../../Domain/Language/Entities/LanguageSemantic';
 import { Language } from '../../Domain/Language/Entities/LanguageV2';
+import { SemanticsFilter } from '../../Domain/Language/Entities/SemanticFilter';
 import sequelizeVariamos from '../dataBase/VariamosORM';
 
 interface Replacements {
@@ -90,7 +91,7 @@ export class LanguageRepository {
   }
 
   async getLanguageSemantics(
-    request: RequestModel<PagedModel>
+    request: RequestModel<SemanticsFilter>
   ): Promise<ResponseModel<LanguageSemantic[]>> {
     const response = new ResponseModel<LanguageSemantic[]>(
       request.transactionId
@@ -105,9 +106,10 @@ export class LanguageRepository {
           `
             SELECT COUNT(1)
             FROM variamos.language
-            WHERE semantics IS NOT NULL AND semantics <> '{}';
+            WHERE semantics IS NOT NULL AND semantics <> '{}'
+              AND (:searchValue IS NULL OR name || ': [' || type || ']' ILIKE '%' || :searchValue || '%');
           `,
-          { type: QueryTypes.SELECT }
+          { type: QueryTypes.SELECT, replacements }
         )
         .then((result: any) => +result?.[0]?.count || 0);
 
@@ -117,6 +119,7 @@ export class LanguageRepository {
             SELECT id, name, type, semantics
             FROM variamos.language
             WHERE semantics IS NOT NULL AND semantics <> '{}'
+              AND (:searchValue IS NULL OR name || ': [' || type || ']' ILIKE '%' || :searchValue || '%')
             ORDER BY name
             LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
           `,

@@ -6,6 +6,7 @@ import { Language } from './Entities/Language';
 import { LanguageElementDraw } from './Entities/LanguageElementDraw';
 import { LanguageFilter } from './Entities/LanguageFilter';
 import { LanguageSemantic } from './Entities/LanguageSemantic';
+import { SemanticsFilter } from './Entities/SemanticFilter';
 
 export class LanguageUseCase {
   getLanguages(
@@ -15,7 +16,7 @@ export class LanguageUseCase {
   }
 
   getLanguageSemantics(
-    request: RequestModel<PagedModel>
+    request: RequestModel<SemanticsFilter>
   ): Promise<ResponseModel<LanguageSemantic[]>> {
     return LanguageRepositoryInstance.getLanguageSemantics(request);
   }

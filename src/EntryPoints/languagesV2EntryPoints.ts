@@ -3,6 +3,7 @@ import { PagedModel } from '../Domain/Core/Entities/PagedModel';
 import { RequestModel } from '../Domain/Core/Entities/RequestModel';
 import { ResponseModel } from '../Domain/Core/Entities/ResponseModel';
 import { LanguageFilter } from '../Domain/Language/Entities/LanguageFilter';
+import { SemanticsFilter } from '../Domain/Language/Entities/SemanticFilter';
 import { LanguageUseCase } from '../Domain/Language/LanguageUseCase';
 
 export const LANGUAGES_V2_ROUTE = '/v2/languages';
@@ -64,14 +65,15 @@ languagesV2Router.get('/elements/draws', async (req, res) => {
 
 languagesV2Router.get('/semantics', async (req, res) => {
   const transactionId = 'getLanguageSemantics';
-  const { pageNumber = null, pageSize = null } = req.query;
+  const { pageNumber = null, pageSize = null, search = null } = req.query;
   try {
-    const filter: PagedModel = new PagedModel(
-      parseInt(pageNumber as string) || undefined,
-      parseInt(pageSize as string) || undefined
-    );
+    const filter: SemanticsFilter = SemanticsFilter.builder()
+      .setSearchValue(search as string)
+      .setPageNumber(pageNumber as unknown as number)
+      .setPageSize(pageSize as unknown as number)
+      .build();
 
-    const request = new RequestModel<PagedModel>(transactionId, filter);
+    const request = new RequestModel<SemanticsFilter>(transactionId, filter);
     const response = await new LanguageUseCase().getLanguageSemantics(request);
 
     const status = response.errorCode || 200;
