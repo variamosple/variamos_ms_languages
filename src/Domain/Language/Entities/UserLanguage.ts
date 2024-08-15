@@ -14,6 +14,9 @@ export const OrmUserLanguage = sequelize.define(
     language_id: {
       type: Sequelize.INTEGER, 
       primaryKey: true
+    },
+    access_level: {
+      type: Sequelize.CHAR(10)
     } 
   },
   {
@@ -40,7 +43,8 @@ export const UserLanguageSchema = {
   type: "object",
   properties: {
     user_id: { type: "string" },
-    language_id: { type: "string" } 
+    language_id: { type: "string" },
+    access_level: { type: "string" }
   },
   required: ["user_id", "language_id"],
   additionalProperties: false,
