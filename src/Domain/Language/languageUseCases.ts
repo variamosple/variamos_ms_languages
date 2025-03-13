@@ -180,7 +180,7 @@ export default class LanguageManagement {
   ): Promise<Response> => {
     let transactionId = "getLanguageByUser_"
     try {
-      let userId = req.params.userId;
+      let userId = req.user?.id!;
       console.log(userId);
       const searchLanguageByType = (await SearchLanguagesByUser(userId));
 
@@ -205,6 +205,8 @@ export default class LanguageManagement {
 
   createLanguage = async (req: Request, res: Response) => {
     try {
+      const userId: string = req.user?.id!;
+
       let validate = ajv.compile(RequestApiSchema);
       let valid = validate(req.body);
 
@@ -216,6 +218,7 @@ export default class LanguageManagement {
 
       let language: Language = new Language();
       language = Object.assign(language, req.body.data);
+
       language.stateAccept = "PENDING";
 
       validate = ajv.compile(LanguageSchema);
@@ -225,8 +228,6 @@ export default class LanguageManagement {
           "Something wrong in data definition. Validate: " +
           JSON.stringify(validate.errors)
         );
-
-      let userId = req.body.user;
 
       const permissions = (await SearchUserPermissions(userId))[0];
       if (!permissions) {
@@ -301,6 +302,7 @@ export default class LanguageManagement {
 
   updateLanguage = async (req: Request, res: Response): Promise<Response> => {
     try {
+      const userId = req.user?.id!;
       let validate = ajv.compile(RequestApiSchema);
       let valid = validate(req.body);
 
@@ -321,8 +323,6 @@ export default class LanguageManagement {
           "Something wrong in data definition. Validate: " +
           JSON.stringify(validate.errors)
         );
-
-      const userId = req.body.user;
 
       const permissions = (await SearchUserPermissions(userId))[0];
       if (!permissions) {
@@ -400,8 +400,8 @@ export default class LanguageManagement {
 
   deleteLanguage = async (req: Request, res: Response) => {
     try {
+      const userId = req.user?.id!;
       const id = parseInt(req.params.id);
-      const userId = req.params.userId;
 
       const permissions = (await SearchUserPermissions(userId))[0];
       if (!permissions) {

@@ -1,22 +1,29 @@
-import { Router } from 'express';
-import { RequestModel } from '../Domain/Core/Entities/RequestModel';
-import { ResponseModel } from '../Domain/Core/Entities/ResponseModel';
-import { LanguageFilter } from '../Domain/Language/Entities/LanguageFilter';
-import { LanguageUseCase } from '../Domain/Language/LanguageUseCase';
+import { isAuthenticated } from "@variamosple/variamos-security";
+import { Router } from "express";
+import { RequestModel } from "../Domain/Core/Entities/RequestModel";
+import { ResponseModel } from "../Domain/Core/Entities/ResponseModel";
+import { LanguageFilter } from "../Domain/Language/Entities/LanguageFilter";
+import { LanguageUseCase } from "../Domain/Language/LanguageUseCase";
 
 const userLanguagesV2Router = Router({ mergeParams: true });
 
-userLanguagesV2Router.get('/', async (req, res) => {
+userLanguagesV2Router.get("/", isAuthenticated, async (req, res) => {
   const { userId } = req.params;
+  const sessionUserId = req.user?.id;
   const { pageNumber, pageSize, name = null } = req.query;
-  const transactionId = 'getUserLanguages';
+  const transactionId = "getUserLanguages";
 
   try {
     if (!userId) {
       return res
         .status(400)
-        .json(new ResponseModel(transactionId, 400, 'userId is required'));
+        .json(new ResponseModel(transactionId, 400, "userId is required"));
+    } else if (userId !== sessionUserId) {
+      return res
+        .status(403)
+        .json(new ResponseModel(transactionId, 403, "Forbidden"));
     }
+
     const filter: LanguageFilter = LanguageFilter.builder()
       .setUserId(userId)
       .setName(name as string)
@@ -30,7 +37,7 @@ userLanguagesV2Router.get('/', async (req, res) => {
     const status = response.errorCode || 200;
     res.status(status).json(response);
   } catch (error) {
-    console.log('Error:', error);
+    console.log("Error:", error);
   }
 });
 
