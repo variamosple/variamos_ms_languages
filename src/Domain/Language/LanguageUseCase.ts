@@ -1,12 +1,12 @@
-import { LanguageRepositoryInstance } from '../../DataProviders/repository/LanguagesRepository';
-import { PagedModel } from '../Core/Entities/PagedModel';
-import { RequestModel } from '../Core/Entities/RequestModel';
-import { ResponseModel } from '../Core/Entities/ResponseModel';
-import { Language } from './Entities/Language';
-import { LanguageElementDraw } from './Entities/LanguageElementDraw';
-import { LanguageFilter } from './Entities/LanguageFilter';
-import { LanguageSemantic } from './Entities/LanguageSemantic';
-import { SemanticsFilter } from './Entities/SemanticFilter';
+import { LanguageRepositoryInstance } from "../../DataProviders/repository/Language/LanguagesRepository";
+import { PagedModel } from "../Core/Entities/PagedModel";
+import { RequestModel } from "../Core/Entities/RequestModel";
+import { ResponseModel } from "../Core/Entities/ResponseModel";
+import { Language } from "./Entities/Language";
+import { LanguageElementDraw } from "./Entities/LanguageElementDraw";
+import { LanguageFilter } from "./Entities/LanguageFilter";
+import { LanguageSemantic } from "./Entities/LanguageSemantic";
+import { SemanticsFilter } from "./Entities/SemanticFilter";
 
 export class LanguageUseCase {
   getLanguages(
