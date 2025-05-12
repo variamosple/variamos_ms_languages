@@ -37,7 +37,7 @@ userLanguagesV2Router.get("/", isAuthenticated, async (req, res) => {
     const status = response.errorCode || 200;
     res.status(status).json(response);
   } catch (error) {
-    console.log("Error:", error);
+    console.error("Error:", error);
   }
 });
 

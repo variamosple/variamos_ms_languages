@@ -1,9 +1,10 @@
-import { PagedModel } from '../../Core/Entities/PagedModel';
+import { PagedModel } from "../../Core/Entities/PagedModel";
 
 export class LanguageFilter extends PagedModel {
   constructor(
     public userId?: string,
     public name?: string,
+    public status?: string,
     pageNumber?: number,
     pageSize?: number
   ) {
@@ -18,6 +19,7 @@ export class LanguageFilter extends PagedModel {
     return new LanguageFilter(
       builder.userId,
       builder.name,
+      builder.status,
       builder.pageNumber,
       builder.pageSize
     );
@@ -27,6 +29,7 @@ export class LanguageFilter extends PagedModel {
 class LanguageFilterBuilder {
   public userId?: string;
   public name?: string;
+  public status?: string;
   public pageNumber?: number;
   public pageSize?: number;
 
@@ -37,6 +40,11 @@ class LanguageFilterBuilder {
 
   public setName(name: string): LanguageFilterBuilder {
     this.name = name;
+    return this;
+  }
+
+  public setStatus(status: string): LanguageFilterBuilder {
+    this.status = status;
     return this;
   }
 

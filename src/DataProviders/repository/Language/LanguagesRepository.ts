@@ -1,32 +1,16 @@
-import { QueryTypes } from 'sequelize';
-import { PagedModel } from '../../Domain/Core/Entities/PagedModel';
-import { RequestModel } from '../../Domain/Core/Entities/RequestModel';
-import { ResponseModel } from '../../Domain/Core/Entities/ResponseModel';
-import { LanguageElementDraw } from '../../Domain/Language/Entities/LanguageElementDraw';
-import { LanguageFilter } from '../../Domain/Language/Entities/LanguageFilter';
-import { LanguageSemantic } from '../../Domain/Language/Entities/LanguageSemantic';
-import { Language } from '../../Domain/Language/Entities/LanguageV2';
-import { SemanticsFilter } from '../../Domain/Language/Entities/SemanticFilter';
-import sequelizeVariamos from '../dataBase/VariamosORM';
+import { QueryTypes } from "sequelize";
+import { PagedModel } from "../../../Domain/Core/Entities/PagedModel";
+import { RequestModel } from "../../../Domain/Core/Entities/RequestModel";
+import { ResponseModel } from "../../../Domain/Core/Entities/ResponseModel";
+import { LanguageElementDraw } from "../../../Domain/Language/Entities/LanguageElementDraw";
+import { LanguageFilter } from "../../../Domain/Language/Entities/LanguageFilter";
+import { LanguageSemantic } from "../../../Domain/Language/Entities/LanguageSemantic";
+import { Language } from "../../../Domain/Language/Entities/LanguageV2";
+import { SemanticsFilter } from "../../../Domain/Language/Entities/SemanticFilter";
+import sequelizeVariamos from "../../dataBase/VariamosORM";
+import { BaseRepository } from "../BaseRepository";
 
-interface Replacements {
-  [key: string]: any;
-}
-
-// TODO: move this method to a filer under mapper foler
-const initilizeReplacements = (filter: Replacements) => {
-  if (!filter) {
-    return {};
-  }
-
-  return Object.entries(filter).reduce<Replacements>((result, [key, value]) => {
-    result[key] = value === undefined ? null : value;
-
-    return result;
-  }, {});
-};
-
-export class LanguageRepository {
+export class LanguageRepository extends BaseRepository {
   async getLanguages(
     request: RequestModel<LanguageFilter>
   ): Promise<ResponseModel<Language[]>> {
@@ -34,7 +18,7 @@ export class LanguageRepository {
     try {
       const { data: filter = new LanguageFilter() } = request;
 
-      const replacements = initilizeReplacements(filter);
+      const replacements = this.initilizeReplacements(filter);
 
       response.totalCount = await sequelizeVariamos
         .query(
@@ -67,24 +51,25 @@ export class LanguageRepository {
           }
         )
         .then((result: any[]) =>
-          //TODO: move this to a mapper file/class
-          result.map<Language>((row) => {
-            return {
-              id: row.id,
-              name: row.name,
-              abstractSyntax: row.abstractSyntax,
-              concreteSyntax: row.concreteSyntax,
-              stateAccept: row.stateAccept,
-              semantics: row.semantics,
-              type: row.type,
-              ownerName: row.owner_name,
-              userId: row.user_id,
-            };
-          })
+          result.map<Language>((row) =>
+            Language.builder()
+              .setId(row.id)
+              .setName(row.name)
+              .setAbstractSyntax(row.abstractSyntax)
+              .setConcreteSyntax(row.concreteSyntax)
+              .setStateAccept(row.stateAccept)
+              .setSemantics(row.semantics)
+              .setType(row.type)
+              .setOwnerName(row.owner_name)
+              .setUserId(row.user_id)
+              .setCreatedAt(row.createdAt)
+              .setUpdatedAt(row.updatedAt)
+              .build()
+          )
         );
     } catch (error) {
-      console.error('Error in getLanguages:', request, error);
-      response.withError(500, 'Internal server error');
+      console.error("Error in getLanguages:", request, error);
+      response.withError(500, "Internal server error");
     }
 
     return response;
@@ -99,7 +84,7 @@ export class LanguageRepository {
     try {
       const { data: filter = new PagedModel() } = request;
 
-      const replacements = initilizeReplacements(filter);
+      const replacements = this.initilizeReplacements(filter);
 
       response.totalCount = await sequelizeVariamos
         .query(
@@ -140,8 +125,8 @@ export class LanguageRepository {
           })
         );
     } catch (error) {
-      console.error('Error in getLanguageSemantics:', request, error);
-      response.withError(500, 'Internal server error');
+      console.error("Error in getLanguageSemantics:", request, error);
+      response.withError(500, "Internal server error");
     }
 
     return response;
@@ -156,7 +141,7 @@ export class LanguageRepository {
     try {
       const { data: filter = new PagedModel() } = request;
 
-      const replacements = initilizeReplacements(filter);
+      const replacements = this.initilizeReplacements(filter);
 
       response.totalCount = await sequelizeVariamos
         .query(
@@ -199,8 +184,8 @@ export class LanguageRepository {
           })
         );
     } catch (error) {
-      console.error('Error in getLanguageElementsDraw:', request, error);
-      response.withError(500, 'Internal server error');
+      console.error("Error in getLanguageElementsDraw:", request, error);
+      response.withError(500, "Internal server error");
     }
 
     return response;

@@ -1,11 +1,37 @@
 // import Sequelize, { JSON, JSONB } from "sequelize";
 // import variamos_db from "../../../DataProviders/dataBase/variamos";
 
-import Sequelize from "sequelize";
+import Sequelize, { Model } from "sequelize";
 import sequelize from "../../../DataProviders/dataBase/VariamosORM";
 
-export const OrmLanguage = sequelize.define(
-  "language",
+export interface LanguageAttributes {
+  id?: number;
+  name?: string;
+  abstractSyntax?: any;
+  concreteSyntax?: any;
+  type?: string;
+  stateAccept?: string;
+  semantics?: any;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export class OrmLanguage
+  extends Model<LanguageAttributes>
+  implements LanguageAttributes
+{
+  id?: number;
+  name?: string;
+  abstractSyntax?: JSON;
+  concreteSyntax?: JSON;
+  type?: string;
+  stateAccept?: string;
+  semantics?: JSON;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+OrmLanguage.init(
   {
     id: {
       type: Sequelize.INTEGER,
@@ -25,19 +51,28 @@ export const OrmLanguage = sequelize.define(
     type: {
       type: Sequelize.TEXT,
     },
-
-    //We add a new field for the semantics
     semantics: {
       type: Sequelize.JSONB,
     },
     stateAccept: {
       type: Sequelize.TEXT,
     },
+    createdAt: {
+      type: Sequelize.DATE,
+      field: "created_at",
+    },
+    updatedAt: {
+      type: Sequelize.DATE,
+      field: "updated_at",
+    },
   },
   {
+    tableName: "language",
+    sequelize,
     freezeTableName: true,
     schema: "variamos",
-    timestamps: false,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
   }
 );
 
@@ -57,7 +92,7 @@ export class Language {
     concreteSyntax?: JSON,
     type?: string,
     stateAccept?: string,
-    semantics?: JSON,
+    semantics?: JSON
   ) {
     this.id = id;
     this.name = name;
@@ -78,18 +113,24 @@ export const LanguageSchema = {
     concreteSyntax: { type: "object" },
     type: { type: "string" },
     stateAccept: { type: "string" },
-    semantics: { type: "object" }
+    semantics: { type: "object" },
   },
   required: ["name", "abstractSyntax", "concreteSyntax", "type", "semantics"],
   additionalProperties: false,
 };
 
-export function SearchLanguagesByTypeAndUser(type:string, userId:string){
-  let query = "select v.* from variamos.sp_view_languages('" + type + "', '" + userId + "' ) v" 
+export function SearchLanguagesByTypeAndUser(type: string, userId: string) {
+  let query =
+    "select v.* from variamos.sp_view_languages('" +
+    type +
+    "', '" +
+    userId +
+    "' ) v";
   return sequelize.query(query);
 }
 
-export function SearchLanguagesByUser(userId:string){
-  let query = "select v.* from variamos.sp_view_languages_by_user('" + userId + "' ) v" 
+export function SearchLanguagesByUser(userId: string) {
+  let query =
+    "select v.* from variamos.sp_view_languages_by_user('" + userId + "' ) v";
   return sequelize.query(query);
 }
