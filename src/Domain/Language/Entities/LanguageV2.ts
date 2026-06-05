@@ -11,6 +11,7 @@ export class Language {
     public semantics?: JSON,
     public userId?: string,
     public ownerName?: string,
+    public accessLevel?: string,
     public createdAt?: Date,
     public updatedAt?: Date,
     public owners?: LanguageOwner[]
@@ -31,6 +32,7 @@ export class Language {
       builder.getSemantics(),
       builder.getUserId(),
       builder.getOwnerName(),
+      builder.getAccessLevel(),
       builder.getCreatedAt(),
       builder.getUpdatedAt(),
       builder.getOwners()
@@ -48,6 +50,7 @@ class LanguageBuilder {
   private semantics?: JSON;
   private userId?: string;
   private ownerName?: string;
+  private accessLevel?: string;
   private createdAt?: Date;
   private updatedAt?: Date;
   private owners?: LanguageOwner[];
@@ -131,6 +134,15 @@ class LanguageBuilder {
 
   public getOwnerName(): string | undefined {
     return this.ownerName;
+  }
+
+  public setAccessLevel(accessLevel: string): LanguageBuilder {
+    this.accessLevel = accessLevel;
+    return this;
+  }
+
+  public getAccessLevel(): string | undefined {
+    return this.accessLevel;
   }
 
   public setCreatedAt(createdAt: Date): LanguageBuilder {
