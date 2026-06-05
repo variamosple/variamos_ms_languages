@@ -17,9 +17,8 @@ export class LanguageRepository extends BaseRepository {
     const response = new ResponseModel<Language[]>(request.transactionId);
     try {
       const { data: filter = new LanguageFilter() } = request;
-
       const replacements = this.initilizeReplacements(filter);
-
+      console.log(replacements);
       response.totalCount = await sequelizeVariamos
         .query(
           `
@@ -27,9 +26,10 @@ export class LanguageRepository extends BaseRepository {
             FROM variamos.language AS l
             LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
-              AND (:userId IS NULL OR ul.user_id = :userId);
-          `,
-          { type: QueryTypes.SELECT, replacements }
+              AND (:userId IS NULL OR ul.user_id = :userId)
+              AND (:status IS NULL OR l."stateAccept" = :status);
+              `,
+              { type: QueryTypes.SELECT, replacements }
         )
         .then((result: any) => +result?.[0]?.count || 0);
 
@@ -42,10 +42,11 @@ export class LanguageRepository extends BaseRepository {
             LEFT JOIN variamos.user AS u ON (ul.user_id = u.id)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
               AND (:userId IS NULL OR ul.user_id = :userId)
-            ORDER BY l.name
-            LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
-          `,
-          {
+              AND (:status IS NULL OR l."stateAccept" = :status)
+              ORDER BY l.name
+              LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
+              `,
+              {
             type: QueryTypes.SELECT,
             replacements,
           }
