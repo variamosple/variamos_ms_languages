@@ -17,35 +17,38 @@ export class LanguageRepository extends BaseRepository {
     const response = new ResponseModel<Language[]>(request.transactionId);
     try {
       const { data: filter = new LanguageFilter() } = request;
-
       const replacements = this.initilizeReplacements(filter);
-
+      console.log(replacements);
       response.totalCount = await sequelizeVariamos
         .query(
           `
-            SELECT COUNT(1)
+            SELECT COUNT(DISTINCT l.id)
             FROM variamos.language AS l
-            LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id)
+            LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id AND (:userId IS NOT NULL) AND (ul.access_level = 'OWNER' OR ul.access_level = 'SHARED') AND ul.user_id = :userId)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
-              AND (:userId IS NULL OR ul.user_id = :userId);
-          `,
-          { type: QueryTypes.SELECT, replacements }
+              AND (:userId IS NULL OR ul.user_id = :userId)
+              AND (:status IS NULL OR l."stateAccept" = :status);
+              `,
+              { type: QueryTypes.SELECT, replacements }
         )
         .then((result: any) => +result?.[0]?.count || 0);
 
       response.data = await sequelizeVariamos
         .query(
           `
-            SELECT l.*, u.name AS owner_name, ul.user_id
+            SELECT l.*, uo.name AS owner_name, uo.id AS owner_id, ul.access_level
             FROM variamos.language AS l
-            LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id AND ul.access_level = 'OWNER')
-            LEFT JOIN variamos.user AS u ON (ul.user_id = u.id)
+            JOIN variamos.user_language AS ul ON (l.id = ul.language_id) 
+            JOIN variamos.user_language AS ulo ON (l.id = ulo.language_id AND ulo.access_level = 'OWNER')
+            JOIN variamos.user AS uo ON (ulo.user_id = uo.id)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
               AND (:userId IS NULL OR ul.user_id = :userId)
-            ORDER BY l.name
-            LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
-          `,
-          {
+              AND (:userId IS NOT NULL OR ul.access_level = 'OWNER')
+              AND (:status IS NULL OR l."stateAccept" = :status)
+              ORDER BY l.name
+              LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
+              `,
+              {
             type: QueryTypes.SELECT,
             replacements,
           }
@@ -61,7 +64,8 @@ export class LanguageRepository extends BaseRepository {
               .setSemantics(row.semantics)
               .setType(row.type)
               .setOwnerName(row.owner_name)
-              .setUserId(row.user_id)
+              .setOwnerId(row.owner_id)
+              .setAccessLevel(row.access_level)
               .setCreatedAt(row.createdAt)
               .setUpdatedAt(row.updatedAt)
               .build()
