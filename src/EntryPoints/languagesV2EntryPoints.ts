@@ -10,12 +10,12 @@ export const LANGUAGES_V2_ROUTE = "/v2/languages";
 
 const languagesV2Router = Router();
 
-async function queryLanguagesRepository(transactionId : string, name : string|null, userId : string|null, stateAccept : string|null, pageNumber : number, pageSize : number, res : any) {
+languagesV2Router.get("/", async (req, res) => {
+  const transactionId = "getLanguages";
+  const { pageNumber, pageSize, name = null } = req.query;
   try {
     const filter: LanguageFilter = LanguageFilter.builder()
       .setName(name as string)
-      .setUserId(userId as string)
-      .setStatus(stateAccept as string)
       .setPageNumber(pageNumber as unknown as number)
       .setPageSize(pageSize as unknown as number)
       .build();
@@ -34,21 +34,6 @@ async function queryLanguagesRepository(transactionId : string, name : string|nu
     );
     res.status(500).json(response);
   }
-};
-
-languagesV2Router.get("/", async (req, res) => {
-  const transactionId = "getLanguages";
-  const { pageNumber, pageSize, name = null } = req.query;
-
-  queryLanguagesRepository(transactionId, name as string, null, null, pageNumber as unknown as number, pageSize as unknown as number, res);
-});
-
-languagesV2Router.get("/public", async (req, res) => {
-  const transactionId = "getPublicLanguages";
-  const { pageNumber, pageSize, name = null } = req.query;
-  const stateAccept = "ACTIVE";
-  // Public/Approved language are named "active" in the DB
-  queryLanguagesRepository(transactionId, name as string, null, stateAccept, pageNumber as unknown as number, pageSize as unknown as number, res);
 });
 
 languagesV2Router.get("/elements/draws", async (req, res) => {
