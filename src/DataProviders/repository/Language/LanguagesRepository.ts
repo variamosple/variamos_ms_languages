@@ -36,11 +36,11 @@ export class LanguageRepository extends BaseRepository {
       response.data = await sequelizeVariamos
         .query(
           `
-            SELECT DISTINCT l.*, uo.name AS owner_name, ul.user_id, ul.access_level
+            SELECT l.*, uo.name AS owner_name, uo.id AS owner_id, ul.access_level
             FROM variamos.language AS l
-            LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id AND (:userId IS NOT NULL) AND (ul.access_level = 'OWNER' OR ul.access_level = 'SHARED') AND ul.user_id = :userId)
-            LEFT JOIN variamos.user_language AS ulo ON (l.id = ulo.language_id AND ulo.access_level = 'OWNER')
-            LEFT JOIN variamos.user AS uo ON (ulo.user_id = uo.id)
+            JOIN variamos.user_language AS ul ON (l.id = ul.language_id) 
+            JOIN variamos.user_language AS ulo ON (l.id = ulo.language_id AND ulo.access_level = 'OWNER')
+            JOIN variamos.user AS uo ON (ulo.user_id = uo.id)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
               AND (:userId IS NULL OR ul.user_id = :userId)
               AND (:status IS NULL OR l."stateAccept" = :status)
@@ -63,7 +63,7 @@ export class LanguageRepository extends BaseRepository {
               .setSemantics(row.semantics)
               .setType(row.type)
               .setOwnerName(row.owner_name)
-              .setUserId(row.user_id)
+              .setOwnerId(row.owner_id)
               .setAccessLevel(row.access_level)
               .setCreatedAt(row.createdAt)
               .setUpdatedAt(row.updatedAt)
