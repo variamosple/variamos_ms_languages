@@ -43,6 +43,7 @@ export class LanguageRepository extends BaseRepository {
             JOIN variamos.user AS uo ON (ulo.user_id = uo.id)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
               AND (:userId IS NULL OR ul.user_id = :userId)
+              AND (:userId IS NOT NULL OR ul.access_level = 'OWNER')
               AND (:status IS NULL OR l."stateAccept" = :status)
               ORDER BY l.name
               LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
