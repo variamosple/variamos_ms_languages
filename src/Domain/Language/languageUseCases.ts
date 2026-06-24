@@ -461,4 +461,57 @@ export default class LanguageManagement {
       return res.status(400).json(responseApi);
     }
   };
+
+  updateLanguageStateAccept = async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id!;
+      const id = parseInt(req.params.id);
+      console.log("BACKEND req.body:", JSON.stringify(req.body));
+      const { stateAccept } = req.body.params;
+
+      const permissions = (await SearchUserPermissions(userId))[0];
+      if (!permissions) {
+        throw "You are not authorized to update this record."
+      }
+      if (permissions.length == 0) {
+        throw "You are not authorized to update this record."
+      }
+
+      let permissionApproveLanguages = false;
+      for (let i = 0; i < permissions.length; i++) {
+        let element: any = permissions[i];
+        if (element.id == 2) {
+          permissionApproveLanguages = true;
+        }
+      }
+
+      if (!permissionApproveLanguages) {
+        throw "You are not authorized to update this record."
+      } 
+
+      const updateLanguage = (await OrmLanguage.update({
+        stateAccept: stateAccept?.toString(),
+      }, {
+        where: { id: id },
+      })) as Language;
+      console.log("update language : ",updateLanguage,"\n- id : ",id,"\n- stateAccept : ",stateAccept);
+      if (updateLanguage) {
+        const responseApi = new ResponseAPISuccess();
+        responseApi.message = "Language stateAccept updated successfully";
+        responseApi.transactionId = "updateLanguageStateAccept_";
+
+        return res.status(200).json(responseApi);
+      }
+    } catch (e) {
+      const responseApi = new ResponseAPIError();
+      responseApi.message = "Internal Server Error";
+      responseApi.errorCode = "02";
+      responseApi.data = JSON.parse(
+        JSON.stringify('{"messageError": "' + e + '"}')
+      );
+      responseApi.transactionId = "updateLanguageStateAccept_";
+      console.log(JSON.stringify(responseApi));
+      return res.status(400).json(responseApi);
+    }
+  };
 }

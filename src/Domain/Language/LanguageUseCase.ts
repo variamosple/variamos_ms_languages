@@ -7,6 +7,7 @@ import { LanguageElementDraw } from "./Entities/LanguageElementDraw";
 import { LanguageFilter } from "./Entities/LanguageFilter";
 import { LanguageSemantic } from "./Entities/LanguageSemantic";
 import { SemanticsFilter } from "./Entities/SemanticFilter";
+import { User } from "../Session/Entities/User";
 
 export class LanguageUseCase {
   getLanguages(
@@ -25,5 +26,26 @@ export class LanguageUseCase {
     request: RequestModel<PagedModel>
   ): Promise<ResponseModel<LanguageElementDraw[]>> {
     return LanguageRepositoryInstance.getLanguageElementsDraw(request);
+  }
+
+  getSharedUsersByLanguage(
+    languageId: number
+  ): Promise<ResponseModel<User[]>> {
+    return LanguageRepositoryInstance.getSharedUsersByLanguage(languageId);
+  }
+
+  shareLanguageWithUser(
+    languageId: number,
+    userId: string
+  ): Promise<ResponseModel<void>> {
+    return LanguageRepositoryInstance.shareLanguageWithUser(languageId, userId);  
+  }
+  
+  unshareLanguageWithUser(
+    languageId: number,
+    userId: string
+  ): Promise<ResponseModel<void>> {
+    return LanguageRepositoryInstance.unshareLanguageWithUser(languageId, userId);
+    
   }
 }

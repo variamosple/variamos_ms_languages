@@ -52,6 +52,16 @@ export const UserLanguageSchema = {
 
 
 export function SearchUserPermissions(userId:string){
-  let query = "SELECT v.* from variamos.sp_view_permissions_by_user('" + userId + "') v" 
+  let query = "SELECT v.* from variamos.sp_view_permissions_by_user('" + userId + "') v"
+  return sequelize.query(query);
+}
+
+export function SearchSharedUsersByLanguage(languageId: number){
+  let query = `
+    SELECT u.id, u.user, u.name, u.email
+    FROM variamos.user u
+    INNER JOIN variamos.user_language ul ON u.id = ul.user_id
+    WHERE (ul.language_id = ${languageId} AND ul.access_level = 'SHARED')
+  `;
   return sequelize.query(query);
 }
