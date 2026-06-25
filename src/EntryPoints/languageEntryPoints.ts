@@ -75,6 +75,12 @@ router.post(
 );
 
 router.put(
+  "/languages/:id/:userId/stateAccept",
+  hasPermissions(["Approve languages"]),
+  _LanguageManagement.updateLanguageStateAccept
+);
+
+router.put(
   "/externalfunctions/:exid",
   _ExternalFunctionManagement.updateExternalFunction
 );

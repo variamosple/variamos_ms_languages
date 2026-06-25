@@ -6,6 +6,7 @@ const sequelizeVariamos = new Sequelize(
   Config.DB.USER,
   Config.DB.PASSWORD,
   {
+    port: Number(Config.DB.PORT),
     host: Config.DB.HOST, 
     dialect: "postgres",
     pool: {

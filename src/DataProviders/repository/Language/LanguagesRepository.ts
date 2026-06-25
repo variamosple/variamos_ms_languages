@@ -7,6 +7,7 @@ import { LanguageFilter } from "../../../Domain/Language/Entities/LanguageFilter
 import { LanguageSemantic } from "../../../Domain/Language/Entities/LanguageSemantic";
 import { Language } from "../../../Domain/Language/Entities/LanguageV2";
 import { SemanticsFilter } from "../../../Domain/Language/Entities/SemanticFilter";
+import { User } from "../../../Domain/Session/Entities/User";
 import sequelizeVariamos from "../../dataBase/VariamosORM";
 import { BaseRepository } from "../BaseRepository";
 
@@ -17,35 +18,38 @@ export class LanguageRepository extends BaseRepository {
     const response = new ResponseModel<Language[]>(request.transactionId);
     try {
       const { data: filter = new LanguageFilter() } = request;
-
       const replacements = this.initilizeReplacements(filter);
-
+      console.log(replacements);
       response.totalCount = await sequelizeVariamos
         .query(
           `
-            SELECT COUNT(1)
+            SELECT COUNT(DISTINCT l.id)
             FROM variamos.language AS l
-            LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id)
+            LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id AND (:userId IS NOT NULL) AND (ul.access_level = 'OWNER' OR ul.access_level = 'SHARED') AND ul.user_id = :userId)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
-              AND (:userId IS NULL OR ul.user_id = :userId);
-          `,
-          { type: QueryTypes.SELECT, replacements }
+              AND (:userId IS NULL OR ul.user_id = :userId)
+              AND (:status IS NULL OR l."stateAccept" = :status);
+              `,
+              { type: QueryTypes.SELECT, replacements }
         )
         .then((result: any) => +result?.[0]?.count || 0);
 
       response.data = await sequelizeVariamos
         .query(
           `
-            SELECT l.*, u.name AS owner_name, ul.user_id
+            SELECT l.*, uo.name AS owner_name, uo.id AS owner_id, ul.access_level
             FROM variamos.language AS l
-            LEFT JOIN variamos.user_language AS ul ON (l.id = ul.language_id AND ul.access_level = 'OWNER')
-            LEFT JOIN variamos.user AS u ON (ul.user_id = u.id)
+            JOIN variamos.user_language AS ul ON (l.id = ul.language_id) 
+            JOIN variamos.user_language AS ulo ON (l.id = ulo.language_id AND ulo.access_level = 'OWNER')
+            JOIN variamos.user AS uo ON (ulo.user_id = uo.id)
             WHERE (:name IS NULL OR l.name ILIKE '%' || :name || '%')
               AND (:userId IS NULL OR ul.user_id = :userId)
-            ORDER BY l.name
-            LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
-          `,
-          {
+              AND (:userId IS NOT NULL OR ul.access_level = 'OWNER')
+              AND (:status IS NULL OR l."stateAccept" = :status)
+              ORDER BY l.name
+              LIMIT :pageSize OFFSET (:pageNumber - 1) * :pageSize;
+              `,
+              {
             type: QueryTypes.SELECT,
             replacements,
           }
@@ -61,7 +65,8 @@ export class LanguageRepository extends BaseRepository {
               .setSemantics(row.semantics)
               .setType(row.type)
               .setOwnerName(row.owner_name)
-              .setUserId(row.user_id)
+              .setOwnerId(row.owner_id)
+              .setAccessLevel(row.access_level)
               .setCreatedAt(row.createdAt)
               .setUpdatedAt(row.updatedAt)
               .build()
@@ -185,6 +190,92 @@ export class LanguageRepository extends BaseRepository {
         );
     } catch (error) {
       console.error("Error in getLanguageElementsDraw:", request, error);
+      response.withError(500, "Internal server error");
+    }
+
+    return response;
+  }
+
+  async getSharedUsersByLanguage(
+    languageId: number
+  ): Promise<ResponseModel<User[]>> {
+    const response = new ResponseModel<User[]>("getSharedUsersByLanguage");
+    try {
+      response.data = await sequelizeVariamos
+        .query(
+          `
+                SELECT u.id, u.user, u.name, u.email
+                FROM variamos.user u
+                INNER JOIN variamos.user_language ul ON u.id = ul.user_id
+                WHERE (ul.language_id = ${languageId} AND ul.access_level = 'SHARED')
+          `,
+          {
+            type: QueryTypes.SELECT,
+            replacements: { languageId },
+          }
+        )
+        .then((result: any[]) =>
+          result.map<User>((row) => ({
+            id: row.id,
+            user: row.user,
+            name: row.name,
+            email: row.email,
+          }))
+        );
+    } catch (error) {
+      console.error("Error in getSharedUsersByLanguage:", error);
+      response.withError(500, "Internal server error");
+    }
+
+    return response;
+  }
+
+  async shareLanguageWithUser(
+    languageId: number,
+    userId: string
+  ): Promise<ResponseModel<void>> {
+    console.log("shareLanguageWithUser", languageId, userId);
+    const response = new ResponseModel<void>("shareLanguageWithUser");
+    try {
+      await sequelizeVariamos
+        .query(
+          `
+                INSERT INTO variamos.user_language (user_id, language_id, access_level)
+                VALUES (:userId, :languageId, 'SHARED')
+          `,
+          {
+            type: QueryTypes.INSERT,
+            replacements: { userId, languageId },
+          }
+        );
+    } catch (error) {
+      console.error("Error in shareLanguageWithUser:", error);
+      response.withError(500, "Internal server error");
+    }
+
+    return response;
+  }
+  
+  async unshareLanguageWithUser(
+    languageId: number,
+    userId: string
+  ): Promise<ResponseModel<void>> {
+    console.log("unshareLanguageWithUser", languageId, userId);
+    const response = new ResponseModel<void>("unshareLanguageWithUser");
+    try {
+      await sequelizeVariamos
+        .query(
+          `
+                DELETE FROM variamos.user_language
+                WHERE user_id = :userId AND language_id = :languageId
+          `,
+          {
+            type: QueryTypes.DELETE,
+            replacements: { userId, languageId },
+          }
+        );
+    } catch (error) {
+      console.error("Error in unshareLanguageWithUser:", error);
       response.withError(500, "Internal server error");
     }
 
