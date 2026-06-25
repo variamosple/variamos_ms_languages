@@ -66,7 +66,7 @@ export class LanguageRepository extends BaseRepository {
               .setType(row.type)
               .setOwnerName(row.owner_name)
               .setOwnerId(row.owner_id)
-              .setAccessLevel(row.access_level)
+              .setAccessLevel(replacements.userId ? row.access_level : null)
               .setCreatedAt(row.createdAt)
               .setUpdatedAt(row.updatedAt)
               .build()
