@@ -5,6 +5,7 @@ import { UsersFilter } from "../../../Domain/Session/Entities/UsersFilter";
 import { User } from "../../../Domain/Session/Entities/User";
 import sequelizeVariamos from "../../dataBase/VariamosORM";
 import { BaseRepository } from "../BaseRepository";
+import { OrmUserLanguage, UserLanguage } from "../../../Domain/Language/Entities/UserLanguage";
 
 export class UsersRepository extends BaseRepository {
   async getUsersNotShared(
@@ -67,6 +68,33 @@ export class UsersRepository extends BaseRepository {
     }
 
     return response;
+  }
+
+  async getAccessLevel(
+    userId : string,
+    languageId : number
+  ){
+    try {
+      const response = await OrmUserLanguage.findAll({
+        where: {
+          user_id: userId,
+          language_id: languageId
+        }
+      }).then((result: any[]) =>
+        result.map<UserLanguage>((row) => ({
+          user_id: row.user_id,
+          language_id: row.language_id,
+          access_level: row.access_level
+      })))
+      if(response.length == 0){
+        return null
+      }else {
+        return response[0].access_level
+      }
+        
+      }catch(error){
+        console.error("Error in getAccessLevel:", error);
+    }
   }
 }
 

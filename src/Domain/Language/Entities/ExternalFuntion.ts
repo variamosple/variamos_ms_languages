@@ -11,6 +11,7 @@ export class ExternalFunction {
   language_id?: number;
   visible?: number;
   call_on_properties_changed?: number;
+  [key: string | symbol]: any;
 
   constructor(
     id?: number,

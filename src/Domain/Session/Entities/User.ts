@@ -6,6 +6,7 @@ export class User {
   user: string; 
   name: string;
   email: string;
+  [key: string | symbol]: any;
 
   constructor(
     id: string,

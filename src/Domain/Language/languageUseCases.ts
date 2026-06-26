@@ -9,9 +9,9 @@ import {
 } from "../Init/entities/response";
 import { Language, LanguageSchema, OrmLanguage, SearchLanguagesByTypeAndUser, SearchLanguagesByUser } from "./Entities/Language";
 import { UserLanguage, UserLanguageSchema, OrmUserLanguage, SearchUserPermissions } from "./Entities/UserLanguage";
-import { User, UserSchema, OrmUser } from "../Session/Entities/User"; 
+import { User, UserSchema, OrmUser } from "../Session/Entities/User";
 import { Config } from "../../Config";
-
+import { UsersRepositoryInstance } from "../../DataProviders/repository/Session/UsersRepository";
 
 const ajv = new Ajv();
 
@@ -90,17 +90,17 @@ export default class LanguageManagement {
     }
   };
 
-  getLanguages = async (_req: Request, res: Response): Promise<Response> => {
+    getLanguages = async (_req: Request, res: Response): Promise<Response> => {
     try {
       const searchLanguage = (await OrmLanguage.findAll({
         attributes: ["id", "name", "type"],
       })) as Language;
-
+      
       const responseApi = new ResponseAPISuccess();
-      responseApi.message = "Language were found successfully v2";
+      responseApi.message = "Languages were found successfully v2";
       responseApi.data = JSON.parse(JSON.stringify(searchLanguage));
       responseApi.transactionId = "getLanguages_";
-
+      
       return res.status(200).json(responseApi);
     } catch (e) {
       const responseApi = new ResponseAPIError();
@@ -114,7 +114,53 @@ export default class LanguageManagement {
       return res.status(400).json(responseApi);
     }
   };
+  
+  getLanguagesById = async(_req: Request, res: Response): Promise<Response> => {
+    try {
+      const userId = _req.user?.id;
+      const id = _req.params.id;
+      
+      if (!userId) {
+        const responseApi = new ResponseAPIError();
+        responseApi.message = "User not authenticated";
+        responseApi.transactionId = "getLanguageById_";
+        return res.status(401).json(responseApi);
+      }
+      const searchLanguage = (await OrmLanguage.findByPk(id) as Language);
+      
+      const userRoles = _req.user?.roles;
+      const accesslevel = await UsersRepositoryInstance.getAccessLevel(userId, parseInt(_req.params.id));
+      const languageStatus = searchLanguage.stateAccept;
 
+      if(languageStatus=="ACTIVE" || userRoles?.find(role => role.toLowerCase() === "language director") || accesslevel == "SHARED" || accesslevel == "OWNER"){
+        const responseApi = new ResponseAPISuccess();
+        responseApi.message = "Language was found successfully by id";
+        responseApi.data = JSON.parse(JSON.stringify(searchLanguage));
+        responseApi.transactionId = "getLanguageById_";
+  
+        return res.status(200).json(responseApi);
+      }
+      else{
+        const responseApi = new ResponseAPIError();
+        responseApi.message = "User not authorized to access this language";
+        responseApi.transactionId = "getLanguageById_";
+        return res.status(403).json(responseApi);
+      }
+  }
+  catch (e) {
+    const responseApi = new ResponseAPIError();
+    responseApi.message = "Internal Server Error";
+    responseApi.errorCode = "05";
+    responseApi.data = JSON.parse(
+      JSON.stringify('{"messageError": "' + e + '"}')
+    );
+    responseApi.transactionId = "getLanguages_";pool
+
+
+    console.log(JSON.stringify(responseApi));
+    return res.status(400).json(responseApi);
+  }
+}
   getLanguageByType = async (
     req: Request,
     res: Response

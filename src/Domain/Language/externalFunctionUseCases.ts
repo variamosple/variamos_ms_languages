@@ -169,9 +169,9 @@ export default class ExternalFunctionManagement {
     try {
       // const id = parseInt(req.params.exid);
 
-      const deleteExternalFunction = (await OrmExternalFunction.destroy({
+      const deleteExternalFunction = await OrmExternalFunction.destroy({
         where: { id: req.params.exid },
-      })) as ExternalFunction;
+      });
 
       if (deleteExternalFunction) {
         const responseApi = new ResponseAPISuccess();

@@ -2,7 +2,7 @@ import { Router } from "express";
 import ExternalFunctionManagement from "../Domain/Language/externalFunctionUseCases";
 import LanguageManagement from "../Domain/Language/languageUseCases";
 
-import { hasPermissions } from "@variamosple/variamos-security";
+import { hasPermissions, isAuthenticated } from "@variamosple/variamos-security";
 import SessionManagement from "../Domain/Session/sessionUseCases";
 
 const router = Router();
@@ -34,6 +34,13 @@ router.post(
   hasPermissions(["languages::create"]),
   _LanguageManagement.createLanguage
 );
+router.get(
+  "/languages/byId/:id",
+  isAuthenticated,
+  hasPermissions(["languages::query"]),
+  _LanguageManagement.getLanguagesById
+)
+
 router.put(
   "/languages/:id",
   hasPermissions(["languages::update"]),
