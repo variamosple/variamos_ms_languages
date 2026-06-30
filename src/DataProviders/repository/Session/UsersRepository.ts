@@ -5,11 +5,14 @@ import { UsersFilter } from "../../../Domain/Session/Entities/UsersFilter";
 import { User } from "../../../Domain/Session/Entities/User";
 import sequelizeVariamos from "../../dataBase/VariamosORM";
 import { BaseRepository } from "../BaseRepository";
-import { OrmUserLanguage, UserLanguage } from "../../../Domain/Language/Entities/UserLanguage";
+import {
+  OrmUserLanguage,
+  UserLanguage,
+} from "../../../Domain/Language/Entities/UserLanguage";
 
 export class UsersRepository extends BaseRepository {
   async getUsersNotShared(
-    request: RequestModel<UsersFilter>
+    request: RequestModel<UsersFilter>,
   ): Promise<ResponseModel<User[]>> {
     const response = new ResponseModel<User[]>(request.transactionId);
     try {
@@ -30,7 +33,7 @@ export class UsersRepository extends BaseRepository {
             AND (:name IS NULL OR u.name ILIKE '%' || :name || '%')
             AND (:email IS NULL OR u.email ILIKE '%' || :email || '%');
               `,
-          { type: QueryTypes.SELECT, replacements }
+          { type: QueryTypes.SELECT, replacements },
         )
         .then((result: any) => +result?.[0]?.count || 0);
 
@@ -52,7 +55,7 @@ export class UsersRepository extends BaseRepository {
           {
             type: QueryTypes.SELECT,
             replacements,
-          }
+          },
         )
         .then((result: any[]) =>
           result.map<User>((row) => ({
@@ -60,7 +63,7 @@ export class UsersRepository extends BaseRepository {
             user: row.user,
             name: row.name,
             email: row.email,
-          }))
+          })),
         );
     } catch (error) {
       console.error("Error in getUsersNotShared:", request, error);
@@ -70,30 +73,27 @@ export class UsersRepository extends BaseRepository {
     return response;
   }
 
-  async getAccessLevel(
-    userId : string,
-    languageId : number
-  ){
+  async getAccessLevel(userId: string, languageId: number) {
     try {
       const response = await OrmUserLanguage.findAll({
         where: {
           user_id: userId,
-          language_id: languageId
-        }
+          language_id: languageId,
+        },
       }).then((result: any[]) =>
         result.map<UserLanguage>((row) => ({
           user_id: row.user_id,
           language_id: row.language_id,
-          access_level: row.access_level
-      })))
-      if(response.length == 0){
-        return null
-      }else {
-        return response[0].access_level
+          access_level: row.access_level,
+        })),
+      );
+      if (response.length == 0) {
+        return null;
+      } else {
+        return response[0].access_level;
       }
-        
-      }catch(error){
-        console.error("Error in getAccessLevel:", error);
+    } catch (error) {
+      console.error("Error in getAccessLevel:", error);
     }
   }
 }

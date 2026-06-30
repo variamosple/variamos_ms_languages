@@ -1,19 +1,15 @@
-import { json, Request, Response } from "express";
-import { QueryResult } from "pg";
 import Ajv from "ajv";
-import { pool } from "../../DataProviders/dataBase/VariamosDB";
-import { RequestAPI, RequestApiSchema } from "../Init/entities/request";
+import { Request, Response } from "express";
+import { RequestApiSchema } from "../Init/entities/request";
 import {
   ResponseAPIError,
   ResponseAPISuccess,
 } from "../Init/entities/response";
 import {
-  ExternalFunctionSchema,
   ExternalFunction,
+  ExternalFunctionSchema,
   OrmExternalFunction,
 } from "./Entities/ExternalFuntion";
-import { Language, OrmLanguage } from "./Entities/Language";
-import { where } from "sequelize/types";
 
 const ajv = new Ajv();
 
@@ -36,7 +32,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "08";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "getExternalFuntions_";
       console.log(JSON.stringify(responseApi));
@@ -52,7 +48,7 @@ export default class ExternalFunctionManagement {
       if (!valid)
         throw new Error(
           "Something wrong in request definition. Validate: " +
-            JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       let extFunction: ExternalFunction = new ExternalFunction();
@@ -64,7 +60,7 @@ export default class ExternalFunctionManagement {
       if (!valid)
         throw new Error(
           "Something wrong in data definition. Validate: " +
-            JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       extFunction.language_id = parseInt(req.params.languageId);
@@ -95,7 +91,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "10";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "createExternalFunction_";
       console.log(JSON.stringify(responseApi));
@@ -111,7 +107,7 @@ export default class ExternalFunctionManagement {
       if (!valid)
         throw new Error(
           "Something wrong in request definition. Validate: " +
-            JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       let extFunction: ExternalFunction = new ExternalFunction();
@@ -124,7 +120,7 @@ export default class ExternalFunctionManagement {
       if (!valid)
         throw new Error(
           "Something wrong in data definition. Validate: " +
-            JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       let newExFunction = await OrmExternalFunction.update(
@@ -140,7 +136,7 @@ export default class ExternalFunctionManagement {
         },
         {
           where: { id: extFunction.id },
-        }
+        },
       );
 
       if (newExFunction.toString() === "0")
@@ -157,7 +153,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "02";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "updateExternalFunction_";
       console.log(JSON.stringify(responseApi));
@@ -185,7 +181,7 @@ export default class ExternalFunctionManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "15";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "deleteExternalFUnction";
       console.log(JSON.stringify(responseApi));

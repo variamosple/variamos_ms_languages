@@ -1,24 +1,32 @@
-import { json, Request, Response } from "express";
-import { QueryResult } from "pg";
 import Ajv from "ajv";
+import { Request, Response } from "express";
+import { Config } from "../../Config";
 import { pool } from "../../DataProviders/dataBase/VariamosDB";
-import { RequestAPI, RequestApiSchema } from "../Init/entities/request";
+import { UsersRepositoryInstance } from "../../DataProviders/repository/Session/UsersRepository";
+import { RequestApiSchema } from "../Init/entities/request";
 import {
   ResponseAPIError,
   ResponseAPISuccess,
 } from "../Init/entities/response";
-import { Language, LanguageSchema, OrmLanguage, SearchLanguagesByTypeAndUser, SearchLanguagesByUser } from "./Entities/Language";
-import { UserLanguage, UserLanguageSchema, OrmUserLanguage, SearchUserPermissions } from "./Entities/UserLanguage";
-import { User, UserSchema, OrmUser } from "../Session/Entities/User";
-import { Config } from "../../Config";
-import { UsersRepositoryInstance } from "../../DataProviders/repository/Session/UsersRepository";
+import {
+  Language,
+  LanguageSchema,
+  OrmLanguage,
+  SearchLanguagesByTypeAndUser,
+  SearchLanguagesByUser,
+} from "./Entities/Language";
+import {
+  OrmUserLanguage,
+  SearchUserPermissions,
+  UserLanguage
+} from "./Entities/UserLanguage";
 
 const ajv = new Ajv();
 
 export default class LanguageManagement {
   getDetailLanguages = async (
     _req: Request,
-    res: Response
+    res: Response,
   ): Promise<Response> => {
     try {
       const searchLanguage = (await OrmLanguage.findAll()) as Language;
@@ -33,7 +41,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "03";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "getDetailLanguages_";
       console.log(JSON.stringify(responseApi));
@@ -43,7 +51,7 @@ export default class LanguageManagement {
 
   getDetailLanguageByType = async (
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<Response> => {
     try {
       const searchLanguageByType = (await OrmLanguage.findAll({
@@ -61,7 +69,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "04";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "getDetailLanguageByType_";
       console.log(JSON.stringify(responseApi));
@@ -74,15 +82,15 @@ export default class LanguageManagement {
       let version = {
         Application: "variamos_ms_languages",
         Version: Config.VERSION,
-        Environment: Config.NODE_ENV
-      } 
+        Environment: Config.NODE_ENV,
+      };
       return res.status(200).json(version);
     } catch (e) {
       const responseApi = new ResponseAPIError();
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "05";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "getLanguages_";
       console.log(JSON.stringify(responseApi));
@@ -90,80 +98,89 @@ export default class LanguageManagement {
     }
   };
 
-    getLanguages = async (_req: Request, res: Response): Promise<Response> => {
+  getLanguages = async (_req: Request, res: Response): Promise<Response> => {
     try {
       const searchLanguage = (await OrmLanguage.findAll({
         attributes: ["id", "name", "type"],
       })) as Language;
-      
+
       const responseApi = new ResponseAPISuccess();
       responseApi.message = "Languages were found successfully v2";
       responseApi.data = JSON.parse(JSON.stringify(searchLanguage));
       responseApi.transactionId = "getLanguages_";
-      
+
       return res.status(200).json(responseApi);
     } catch (e) {
       const responseApi = new ResponseAPIError();
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "05";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "getLanguages_";
       console.log(JSON.stringify(responseApi));
       return res.status(400).json(responseApi);
     }
   };
-  
-  getLanguagesById = async(_req: Request, res: Response): Promise<Response> => {
+
+  getLanguagesById = async (
+    _req: Request,
+    res: Response,
+  ): Promise<Response> => {
     try {
       const userId = _req.user?.id;
       const id = _req.params.id;
-      
+
       if (!userId) {
         const responseApi = new ResponseAPIError();
         responseApi.message = "User not authenticated";
         responseApi.transactionId = "getLanguageById_";
         return res.status(401).json(responseApi);
       }
-      const searchLanguage = (await OrmLanguage.findByPk(id) as Language);
-      
+      const searchLanguage = (await OrmLanguage.findByPk(id)) as Language;
+
       const userRoles = _req.user?.roles;
-      const accesslevel = await UsersRepositoryInstance.getAccessLevel(userId, parseInt(_req.params.id));
+      const accesslevel = await UsersRepositoryInstance.getAccessLevel(
+        userId,
+        parseInt(_req.params.id),
+      );
       const languageStatus = searchLanguage.stateAccept;
 
-      if(languageStatus=="ACTIVE" || userRoles?.find(role => role.toLowerCase() === "language director") || accesslevel == "SHARED" || accesslevel == "OWNER"){
+      if (
+        languageStatus == "ACTIVE" ||
+        userRoles?.find((role) => role.toLowerCase() === "language director") ||
+        accesslevel == "SHARED" ||
+        accesslevel == "OWNER"
+      ) {
         const responseApi = new ResponseAPISuccess();
         responseApi.message = "Language was found successfully by id";
         responseApi.data = JSON.parse(JSON.stringify(searchLanguage));
         responseApi.transactionId = "getLanguageById_";
-  
+
         return res.status(200).json(responseApi);
-      }
-      else{
+      } else {
         const responseApi = new ResponseAPIError();
         responseApi.message = "User not authorized to access this language";
         responseApi.transactionId = "getLanguageById_";
         return res.status(403).json(responseApi);
       }
-  }
-  catch (e) {
-    const responseApi = new ResponseAPIError();
-    responseApi.message = "Internal Server Error";
-    responseApi.errorCode = "05";
-    responseApi.data = JSON.parse(
-      JSON.stringify('{"messageError": "' + e + '"}')
-    );
-    responseApi.transactionId = "getLanguages_";pool
+    } catch (e) {
+      const responseApi = new ResponseAPIError();
+      responseApi.message = "Internal Server Error";
+      responseApi.errorCode = "05";
+      responseApi.data = JSON.parse(
+        JSON.stringify('{"messageError": "' + e + '"}'),
+      );
+      responseApi.transactionId = "getLanguages_";
+      pool;
 
-
-    console.log(JSON.stringify(responseApi));
-    return res.status(400).json(responseApi);
-  }
-}
+      console.log(JSON.stringify(responseApi));
+      return res.status(400).json(responseApi);
+    }
+  };
   getLanguageByType = async (
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<Response> => {
     try {
       const searchLanguageByType = (await OrmLanguage.findAll({
@@ -182,7 +199,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "06";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "getLanguageByType_";
       console.log(JSON.stringify(responseApi));
@@ -192,14 +209,17 @@ export default class LanguageManagement {
 
   getLanguageByTypeAndUser = async (
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<Response> => {
     try {
       let type = req.params.type.toUpperCase();
       console.log(type);
       let userId = req.params.userId;
       console.log(userId);
-      const searchLanguageByType = (await SearchLanguagesByTypeAndUser(type, userId));
+      const searchLanguageByType = await SearchLanguagesByTypeAndUser(
+        type,
+        userId,
+      );
 
       const responseApi = new ResponseAPISuccess();
       responseApi.message = "Language were found successfully";
@@ -212,7 +232,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "06";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "getLanguageByTypeAndUser_";
       console.log(JSON.stringify(responseApi));
@@ -222,13 +242,13 @@ export default class LanguageManagement {
 
   getLanguagesByUser = async (
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<Response> => {
-    let transactionId = "getLanguageByUser_"
+    let transactionId = "getLanguageByUser_";
     try {
       let userId = req.user?.id!;
       console.log(userId);
-      const searchLanguageByType = (await SearchLanguagesByUser(userId));
+      const searchLanguageByType = await SearchLanguagesByUser(userId);
 
       const responseApi = new ResponseAPISuccess();
       responseApi.message = "Language were found successfully";
@@ -241,7 +261,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "06";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = transactionId;
       console.log(JSON.stringify(responseApi));
@@ -259,7 +279,7 @@ export default class LanguageManagement {
       if (!valid)
         throw new Error(
           "Something wrong in request definition. Validate: " +
-          JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       let language: Language = new Language();
@@ -272,15 +292,15 @@ export default class LanguageManagement {
       if (!valid)
         throw new Error(
           "Something wrong in data definition. Validate: " +
-          JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       const permissions = (await SearchUserPermissions(userId))[0];
       if (!permissions) {
-        throw "You are not authorized to create this record."
+        throw "You are not authorized to create this record.";
       }
       if (permissions.length == 0) {
-        throw "You are not authorized to create this record."
+        throw "You are not authorized to create this record.";
       }
 
       let permissionApproveLanguages = false;
@@ -289,16 +309,15 @@ export default class LanguageManagement {
         let element: any = permissions[i];
         if (element.id == 1) {
           permissionCreateLanguages = true;
-        }
-        else if (element.id == 2) {
+        } else if (element.id == 2) {
           permissionApproveLanguages = true;
         }
       }
 
       if (!permissionApproveLanguages) {
         if (!permissionCreateLanguages) {
-          throw "You are not authorized to create this record."
-        } 
+          throw "You are not authorized to create this record.";
+        }
         language.stateAccept = "PENDING";
       }
 
@@ -319,10 +338,7 @@ export default class LanguageManagement {
       userLanguage.user_id = userId;
 
       let newUserLanguage = await OrmUserLanguage.create(userLanguage, {
-        fields: [
-          "user_id",
-          "language_id",
-        ],
+        fields: ["user_id", "language_id"],
       });
 
       if (newLanguage) {
@@ -338,7 +354,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "01";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "createLanguage_";
       console.log(JSON.stringify(responseApi));
@@ -355,7 +371,7 @@ export default class LanguageManagement {
       if (!valid)
         throw new Error(
           "Something wrong in request definition. Validate: " +
-          JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       let language: Language = new Language();
@@ -367,15 +383,15 @@ export default class LanguageManagement {
       if (!valid)
         throw new Error(
           "Something wrong in data definition. Validate: " +
-          JSON.stringify(validate.errors)
+            JSON.stringify(validate.errors),
         );
 
       const permissions = (await SearchUserPermissions(userId))[0];
       if (!permissions) {
-        throw "You are not authorized to modify this record."
+        throw "You are not authorized to modify this record.";
       }
       if (permissions.length == 0) {
-        throw "You are not authorized to modify this record."
+        throw "You are not authorized to modify this record.";
       }
 
       let permissionApproveLanguages = false;
@@ -384,28 +400,26 @@ export default class LanguageManagement {
         let element: any = permissions[i];
         if (element.id == 1) {
           permissionCreateLanguages = true;
-        }
-        else if (element.id == 2) {
+        } else if (element.id == 2) {
           permissionApproveLanguages = true;
         }
       }
 
       if (!permissionApproveLanguages) {
         if (!permissionCreateLanguages) {
-          throw "You are not authorized to modify this record."
+          throw "You are not authorized to modify this record.";
         }
         let userLanguage = (await OrmUserLanguage.findOne({
           where: {
             user_id: userId,
             language_id: language.id,
           },
-        })) as UserLanguage; 
+        })) as UserLanguage;
         if (!userLanguage) {
-          throw "You are not authorized to modify this record."
+          throw "You are not authorized to modify this record.";
         }
         language.stateAccept = "PENDING";
       }
-
 
       let updateLanguage = await OrmLanguage.update(
         {
@@ -419,7 +433,7 @@ export default class LanguageManagement {
         },
         {
           where: { id: language.id },
-        }
+        },
       );
 
       if (updateLanguage.toString() === "0")
@@ -436,7 +450,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "02";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "updateLanguage_";
       console.log(JSON.stringify(responseApi));
@@ -451,10 +465,10 @@ export default class LanguageManagement {
 
       const permissions = (await SearchUserPermissions(userId))[0];
       if (!permissions) {
-        throw "You are not authorized to delete this record."
+        throw "You are not authorized to delete this record.";
       }
       if (permissions.length == 0) {
-        throw "You are not authorized to delete this record."
+        throw "You are not authorized to delete this record.";
       }
 
       let permissionApproveLanguages = false;
@@ -463,26 +477,25 @@ export default class LanguageManagement {
         let element: any = permissions[i];
         if (element.id == 1) {
           permissionCreateLanguages = true;
-        }
-        else if (element.id == 2) {
+        } else if (element.id == 2) {
           permissionApproveLanguages = true;
         }
       }
 
       if (!permissionApproveLanguages) {
         if (!permissionCreateLanguages) {
-          throw "You are not authorized to delete this record."
+          throw "You are not authorized to delete this record.";
         }
         let userLanguage = (await OrmUserLanguage.findOne({
           where: {
             user_id: userId,
             language_id: id,
           },
-        })) as UserLanguage; 
+        })) as UserLanguage;
         if (!userLanguage) {
-          throw "You are not authorized to delete this record."
-        } 
-      } 
+          throw "You are not authorized to delete this record.";
+        }
+      }
 
       const deleteLanguage = (await OrmLanguage.destroy({
         where: { id: id },
@@ -500,7 +513,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "07";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "deleteLanguage_";
       console.log(JSON.stringify(responseApi));
@@ -517,10 +530,10 @@ export default class LanguageManagement {
 
       const permissions = (await SearchUserPermissions(userId))[0];
       if (!permissions) {
-        throw "You are not authorized to update this record."
+        throw "You are not authorized to update this record.";
       }
       if (permissions.length == 0) {
-        throw "You are not authorized to update this record."
+        throw "You are not authorized to update this record.";
       }
 
       let permissionApproveLanguages = false;
@@ -532,15 +545,25 @@ export default class LanguageManagement {
       }
 
       if (!permissionApproveLanguages) {
-        throw "You are not authorized to update this record."
-      } 
+        throw "You are not authorized to update this record.";
+      }
 
-      const updateLanguage = (await OrmLanguage.update({
-        stateAccept: stateAccept?.toString(),
-      }, {
-        where: { id: id },
-      })) as Language;
-      console.log("update language : ",updateLanguage,"\n- id : ",id,"\n- stateAccept : ",stateAccept);
+      const updateLanguage = (await OrmLanguage.update(
+        {
+          stateAccept: stateAccept?.toString(),
+        },
+        {
+          where: { id: id },
+        },
+      )) as Language;
+      console.log(
+        "update language : ",
+        updateLanguage,
+        "\n- id : ",
+        id,
+        "\n- stateAccept : ",
+        stateAccept,
+      );
       if (updateLanguage) {
         const responseApi = new ResponseAPISuccess();
         responseApi.message = "Language stateAccept updated successfully";
@@ -553,7 +576,7 @@ export default class LanguageManagement {
       responseApi.message = "Internal Server Error";
       responseApi.errorCode = "02";
       responseApi.data = JSON.parse(
-        JSON.stringify('{"messageError": "' + e + '"}')
+        JSON.stringify('{"messageError": "' + e + '"}'),
       );
       responseApi.transactionId = "updateLanguageStateAccept_";
       console.log(JSON.stringify(responseApi));
