@@ -11,6 +11,7 @@ export class ExternalFunction {
   language_id?: number;
   visible?: number;
   call_on_properties_changed?: number;
+  [key: string | symbol]: any;
 
   constructor(
     id?: number,
@@ -21,7 +22,7 @@ export class ExternalFunction {
     resulting_action?: string,
     language_id?: number,
     visible?: number,
-    call_on_properties_changed?: number
+    call_on_properties_changed?: number,
   ) {
     this.id = id;
     this.name = name;
@@ -57,7 +58,7 @@ export const OrmExternalFunction = sequelize.define(
     freezeTableName: true,
     schema: "variamos",
     timestamps: false,
-  }
+  },
 );
 
 export const ExternalFunctionSchema = {

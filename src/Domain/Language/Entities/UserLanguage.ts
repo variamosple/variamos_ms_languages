@@ -29,13 +29,16 @@ export const OrmUserLanguage = sequelize.define(
 export class UserLanguage {
   user_id?: string;
   language_id?: number; 
-
+  access_level?: string;
+  [key: string | symbol]: any;
   constructor(
     user_id?: string,
-  language_id?: number
+    language_id?: number,
+    access_level?: string
   ) {
     this.user_id = user_id;
-    this.language_id = language_id; 
+    this.language_id = language_id;
+    this.access_level = access_level; 
   }
 }
 

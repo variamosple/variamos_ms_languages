@@ -39,5 +39,5 @@ UserLanguageModel.init(
     schema: "variamos",
     timestamps: false,
     sequelize: sequelizeVariamos,
-  }
+  },
 );
