@@ -5,6 +5,9 @@ import { Config } from "../../Config";
 import adminLanguagesV1Router, {
   ADMIN_LANGUAGES_V1_ROUTE,
 } from "../../EntryPoints/adminLanguagesV1EntryPoints";
+import healthRouter, {
+  HEALTH_ROUTE,
+} from "../../EntryPoints/healthEntryPoints";
 import indexRoutes from "../../EntryPoints/languageEntryPoints";
 import languagesV2Router, {
   LANGUAGES_V2_ROUTE,
@@ -23,6 +26,7 @@ app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json({ limit: "60mb" }));
 app.use(express.urlencoded({ extended: true, limit: "60mb" }));
+app.use(HEALTH_ROUTE, healthRouter);
 app.use(ADMIN_LANGUAGES_V1_ROUTE, adminLanguagesV1Router);
 app.use(USERS_V2_ROUTE, usersV2Router);
 app.use(LANGUAGES_V2_ROUTE, languagesV2Router);
