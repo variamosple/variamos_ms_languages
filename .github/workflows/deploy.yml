@@ -1,0 +1,18 @@
+# Builds, checks and deploys the service with the shared workflow of the
+# organization: https://github.com/variamosple/.github
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: variamosple/.github/.github/workflows/deploy.yml@v1
+    with:
+      image: variamos_ms_languages
+      service: variamosmslanguagesaws
+      health-url: https://app.variamos.com/variamos_ms_languages/health
+      health-name: variamos_ms_languages
+    secrets: inherit
